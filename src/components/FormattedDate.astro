@@ -1,17 +1,42 @@
 ---
 interface Props {
-	date: Date;
+  date: Date;
+  variant?: 'default' | 'muted' | 'subtle';
+  size?: 'sm' | 'base' | 'lg';
 }
 
-const { date } = Astro.props;
+const { 
+  date, 
+  variant = 'default', 
+  size = 'base' 
+} = Astro.props;
+
+const variantClasses = {
+  default: 'text-foreground',
+  muted: 'text-muted-foreground',
+  subtle: 'text-muted-foreground text-sm'
+};
+
+const sizeClasses = {
+  sm: 'text-sm',
+  base: 'text-base',
+  lg: 'text-lg'
+};
 ---
 
-<time datetime={date.toISOString()}>
-	{
-		date.toLocaleDateString('en-us', {
-			year: 'numeric',
-			month: 'short',
-			day: 'numeric',
-		})
-	}
+<time 
+  datetime={date.toISOString()} 
+  class:list={[
+    'inline-block',
+    variantClasses[variant],
+    sizeClasses[size]
+  ]}
+>
+  {
+    date.toLocaleDateString('en-us', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    })
+  }
 </time>

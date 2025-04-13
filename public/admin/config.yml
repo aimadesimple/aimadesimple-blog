@@ -19,5 +19,6 @@ collections:
       - { label: "Publication Date", name: "pubDate", widget: "datetime" }
       - { label: "Update Date", name: "updatedDate", widget: "datetime", required: false }
       - { label: "Hero Image", name: "heroImage", widget: "image", required: false }
+      - { label: "Featured", name: "featured", widget: "boolean", default: false }
       - { label: "Content", name: "body", widget: "markdown" }
       - { label: "Tags", name: "tags", widget: "list", default: ["post"] }
