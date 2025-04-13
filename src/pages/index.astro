@@ -3,13 +3,18 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
 
 // Function to extract unique tags from blog posts
-function extractUniqueTags(posts) {
+function extractUniqueTags(posts: CollectionEntry<'blog'>[]): string[] {
     const allTags = posts.flatMap(post => post.data.tags || []);
     return [...new Set(allTags)].sort();
+}
+
+// Function to calculate read time
+function calculateReadTime(body: string): number {
+    return Math.ceil(body.split(' ').length / 200);
 }
 
 const posts = (await getCollection('blog')).sort(
@@ -50,35 +55,39 @@ const uniqueTags = extractUniqueTags(posts);
 					</p>
 				</div>
 
-				{/* Search and Filter Section */}
-				<div class="mb-12">
-					<div class="relative max-w-2xl mx-auto">
-						<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-							<svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-								<path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.817A6 6 0 012 8z" clip-rule="evenodd" />
-							</svg>
-						</div>
-						<input 
-							type="text" 
-							id="blog-search" 
-							placeholder="Search articles..." 
-							class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-aimade-blue/50 text-gray-900"
-						>
-					</div>
-					<div class="flex flex-wrap justify-center gap-2 mt-4">
-						{uniqueTags.map(tag => (
-							<button 
-								type="button" 
-								data-tag={tag}
-								class="tag-filter-btn px-3 py-1 text-sm rounded-full border border-gray-300 text-gray-600 hover:bg-aimade-blue hover:text-white hover:border-aimade-blue transition-colors"
+				{/* Search and Filter Section - Always visible */}
+				{posts.length > 0 && (
+					<div class="mb-12">
+						<div class="relative max-w-2xl mx-auto">
+							<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+								<svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+									<path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.817A6 6 0 012 8z" clip-rule="evenodd" />
+								</svg>
+							</div>
+							<input 
+								type="text" 
+								id="blog-search" 
+								placeholder="Search articles..." 
+								class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-aimade-blue/50 text-gray-900"
 							>
-								{tag}
-							</button>
-						))}
+						</div>
+						{uniqueTags.length > 0 && (
+							<div class="flex flex-wrap justify-center gap-2 mt-4">
+								{uniqueTags.map(tag => (
+									<button 
+										type="button" 
+										data-tag={tag}
+										class="tag-filter-btn px-3 py-1 text-sm rounded-full border border-gray-300 text-gray-600 hover:bg-aimade-blue hover:text-white hover:border-aimade-blue transition-colors"
+									>
+										{tag}
+									</button>
+								))}
+							</div>
+						)}
 					</div>
-				</div>
+				)}
 
-				{/* Featured Posts Section */}
+				{/* Featured Posts Section - Only render if has posts */}
 				{featuredPosts.length > 0 && (
 					<div class="mb-16">
 						<h2 class="text-2xl font-bold text-primary mb-6 text-center">
@@ -122,7 +131,7 @@ const uniqueTags = extractUniqueTags(posts);
 												/>
 												<span class="mx-2">•</span>
 												<span>
-													{Math.ceil(post.body.split(' ').length / 200)} min read
+													{post.body ? calculateReadTime(post.body) : 1} min read
 												</span>
 											</div>
 										</div>
@@ -133,59 +142,62 @@ const uniqueTags = extractUniqueTags(posts);
 					</div>
 				)}
 
-				{/* All Posts Section */}
-				<div>
-					<h2 class="text-2xl font-bold text-primary mb-6 text-center">
-						All Articles
-					</h2>
-					<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-						{regularPosts.map((post) => (
-							<a 
-								href={`/blog/${post.id}/`} 
-								class="block group"
-							>
-								<div class="bg-white rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-gray-100 overflow-hidden">
-									{post.data.heroImage && (
-										<div class="aspect-video overflow-hidden">
-											<img 
-												src={post.data.heroImage} 
-												alt={post.data.title} 
-												class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
-											/>
-										</div>
-									)}
-									<div class="p-5">
-										<div class="mb-2">
-											{post.data.tags?.map(tag => (
-												<span class="inline-block bg-aimade-blue/10 text-aimade-blue text-xs px-2 py-1 rounded-full mr-2 mb-2">
-													{tag}
+				{/* All Posts Section - Only render if has non-featured posts */}
+				{regularPosts.length > 0 && (
+					<div>
+						<h2 class="text-2xl font-bold text-primary mb-6 text-center">
+							All Articles
+						</h2>
+						<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+							{regularPosts.map((post) => (
+								<a 
+									href={`/blog/${post.id}/`} 
+									class="block group"
+								>
+									<div class="bg-white rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-gray-100 overflow-hidden">
+										{post.data.heroImage && (
+											<div class="aspect-video overflow-hidden">
+												<img 
+													src={post.data.heroImage} 
+													alt={post.data.title} 
+													class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
+												/>
+											</div>
+										)}
+										<div class="p-5">
+											<div class="mb-2">
+												{post.data.tags?.map(tag => (
+													<span class="inline-block bg-aimade-blue/10 text-aimade-blue text-xs px-2 py-1 rounded-full mr-2 mb-2">
+														{tag}
+													</span>
+												))}
+											</div>
+											<h3 class="text-xl font-bold text-primary group-hover:text-aimade-blue mb-3 transition-colors">
+												{post.data.title}
+											</h3>
+											<p class="text-muted-foreground mb-4 line-clamp-3">
+												{post.data.description}
+											</p>
+											<div class="flex items-center text-sm text-muted-foreground">
+												<FormattedDate 
+													date={post.data.pubDate} 
+													variant="muted" 
+													size="sm" 
+												/>
+												<span class="mx-2">•</span>
+												<span>
+													{post.body ? calculateReadTime(post.body) : 1} min read
 												</span>
-											))}
-										</div>
-										<h3 class="text-xl font-bold text-primary group-hover:text-aimade-blue mb-3 transition-colors">
-											{post.data.title}
-										</h3>
-										<p class="text-muted-foreground mb-4 line-clamp-3">
-											{post.data.description}
-										</p>
-										<div class="flex items-center text-sm text-muted-foreground">
-											<FormattedDate 
-												date={post.data.pubDate} 
-												variant="muted" 
-												size="sm" 
-											/>
-											<span class="mx-2">•</span>
-											<span>
-												{Math.ceil(post.body.split(' ').length / 200)} min read
-											</span>
+											</div>
 										</div>
 									</div>
-								</div>
-							</a>
-						))}
+								</a>
+							))}
+						</div>
 					</div>
-				</div>
+				)}
 
+				{/* No Posts Message */}
 				{posts.length === 0 && (
 					<div class="text-center py-16 bg-white rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-gray-100">
 						<h2 class="text-2xl font-semibold text-muted-foreground mb-4">
@@ -203,10 +215,10 @@ const uniqueTags = extractUniqueTags(posts);
 
 		<script>
 			document.addEventListener('DOMContentLoaded', () => {
-				const searchInput = document.getElementById('blog-search');
+				const searchInput = document.getElementById('blog-search') as HTMLInputElement;
 				const tagFilterButtons = document.querySelectorAll('.tag-filter-btn');
 				const blogPosts = document.querySelectorAll('main a[href^="/blog/"]');
-				let activeTag = null;
+				let activeTag: string | null = null;
 
 				// Reset active tag styling
 				function resetTagButtons() {
@@ -219,12 +231,14 @@ const uniqueTags = extractUniqueTags(posts);
 				// Tag filter button click handler
 				tagFilterButtons.forEach(btn => {
 					btn.addEventListener('click', () => {
+						const tagValue = (btn as HTMLButtonElement).getAttribute('data-tag');
+						
 						// If clicking the same tag, deselect it
-						if (activeTag === btn.dataset.tag) {
+						if (activeTag === tagValue) {
 							activeTag = null;
 							resetTagButtons();
 						} else {
-							activeTag = btn.dataset.tag;
+							activeTag = tagValue;
 							resetTagButtons();
 							btn.classList.remove('border-gray-300', 'text-gray-600');
 							btn.classList.add('bg-aimade-blue', 'text-white');
@@ -237,19 +251,19 @@ const uniqueTags = extractUniqueTags(posts);
 					const searchTerm = searchInput.value.toLowerCase();
 
 					blogPosts.forEach(post => {
-						const title = post.querySelector('h3').textContent.toLowerCase();
-						const description = post.querySelector('p').textContent.toLowerCase();
-						const tags = Array.from(post.querySelectorAll('.inline-block'))
-							.map(tag => tag.textContent.toLowerCase());
+						const title = (post.querySelector('h3') as HTMLElement).textContent?.toLowerCase() || '';
+						const description = (post.querySelector('p') as HTMLElement).textContent?.toLowerCase() || '';
+						const tagElements = post.querySelectorAll('.inline-block.bg-aimade-blue\\/10');
+						const tags = Array.from(tagElements).map(tag => tag.textContent?.trim().toLowerCase() || '');
 
 						const matchesSearch = searchTerm === '' || 
 							title.includes(searchTerm) || 
 							description.includes(searchTerm);
 						
 						const matchesTag = !activeTag || 
-							tags.includes(activeTag.toLowerCase());
+							tags.some(tag => tag === activeTag?.toLowerCase());
 
-						post.style.display = matchesSearch && matchesTag ? 'block' : 'none';
+						(post as HTMLElement).style.display = matchesSearch && matchesTag ? 'block' : 'none';
 					});
 				}
 
