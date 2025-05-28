@@ -1,0 +1,456 @@
+---
+title: 'What is Artificial Intelligence (AI)?'
+description: 'Curious about AI? This blog is your jargon-free guide to what artificial intelligence is, how it began, key milestones, and essential terms — making AI history, types, and impact easy for everyone to understand.'
+pubDate: 'May 28 2025'
+heroImage: '/what-is-artificial-intelligence-blog-image-v2.jpg'
+---
+
+## Blog Summary
+
+Artificial Intelligence (AI) refers to the science of building machines that can mimic or simulate human intelligence—such as learning, reasoning, problem-solving, perception, and language understanding. Coined in 1956 at the Dartmouth Summer Research Project by John McCarthy, the term marked the birth of a new field distinct from earlier work in cybernetics. Over time, AI has evolved from symbolic rule-based systems to data-driven machine learning and deep learning models.
+
+This blog provides a comprehensive introduction to AI, tracing its philosophical and mathematical origins, explaining the differences between AI, machine learning, and deep learning, and unpacking various types of AI—from narrow AI to the hypothetical superintelligence. It also covers key milestones, from Turing's Imitation Game and the invention of the perceptron to the breakthroughs of AlphaGo, GPT, and beyond.
+
+By the end, you'll gain clarity on what AI really means, how it developed, where it stands today, and what you need to know to hold your own in any AI conversation.
+
+## Key Questions
+
+1. What exactly is Artificial Intelligence (AI)?
+2. What are the origins of AI?
+3. What is the difference between Artificial Intelligence and Machine Learning?
+4. What is Deep Learning?
+5. What are the main types of AI?
+6. What is Generative AI ?
+
+## Definition of AI
+
+<div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 my-6">
+  <div class="flex">
+    <div class="ml-3">
+      <p class="text-sm text-yellow-700">
+        <strong>💡 Did You Know?</strong><br />
+        The term 'Artificial Intelligence' was coined by John McCarthy during the seminal 1956 Dartmouth Summer AI Project. He deliberately chose 'Artificial Intelligence' to differentiate this emerging field from 'Cybernetics', another popular research domain at the time focused primarily on control and communication in biological and mechanical systems.  
+        
+        We will delve deeper into this pivotal moment in AI history later in the blog
+      </p>
+    </div>
+  </div>
+</div>
+
+Artificial Intelligence, or AI, is a field of Computer Science which broadly focuses on creating machines that exhibit 'intelligence'.
+
+Intelligence typically refers to the ability to perceive, reason, learn, and adapt—qualities that enable humans to perform tasks requiring cognition, decision-making, problem-solving, and effective interaction with their environment.
+
+As you may have noticed by now, the definition of Artificial Intelligence is intentionally vague. This vagueness arises primarily because reaching a universally agreeable definition of AI has been challenging, making it what Marvin Minsky aptly described as a 'suitcase-word'. Marvin Minsky, one of the original AI pioneers and a participant in the seminal 1956 Dartmouth Summer AI Project, used this term to highlight how AI encompasses a diverse set of ideas, methods, and applications packed into a single term, each carrying a slightly different meaning depending on context. According to Minsky, AI indeed suffers from a 'packaging problem', holding multiple definitions simultaneously.
+
+Interestingly, the absence of a universally accepted, precise definition of AI has been both a challenge and a boon. As highlighted by Stanford's influential 'One Hundred Year Study on Artificial Intelligence' (2016), this lack of strict boundaries has allowed AI to grow, evolve, and advance at an accelerating pace. Practitioners, researchers, and developers navigate this field guided primarily by a general sense of direction and urgency rather than strict definitions.
+
+Since the 2010s, however, popular media has increasingly associated AI almost exclusively with 'Deep Learning' (neural networks). This narrow view represents an unfortunate oversimplification and inaccuracy, as Melanie Mitchell points out in her book Artificial Intelligence: A Guide for Thinking Humans. Deep Learning is indeed a powerful subset of Machine Learning, which itself is a subset of Artificial Intelligence. Nevertheless, equating AI solely with Deep Learning overlooks the field's broader complexity and variety.
+
+AI fundamentally comprises diverse methodologies aiming to create machine 'intelligence', making it critical to keep the suitcase-word concept in mind for a complete understanding.
+
+To clarify AI further, here are several definitions from prominent figures and organisations:
+
+- Herbert Simon (participant in the 1956 Dartmouth Summer AI Project), in his seminal paper, <cite>Artificial Intelligence: An Empirical Science (1995)[^1]</cite>, defined AI as:
+    
+    > A branch of computer science that studies the properties of intelligence by synthesizing intelligence.
+
+- Nils J. Nilsson, in <cite>The Quest for Artificial Intelligence: A History of Ideas and Achievements (2010)[^2]</cite>, describes AI as:
+    
+    > Artificial intelligence is that activity devoted to making machines intelligent, and intelligence is that quality that enables an entity to function appropriately and with foresight in its environment.
+
+- Google – <cite>Introduction to Generative AI[^3]</cite>:
+    
+    > AI is the theory and development of computer systems able to perform tasks normally requiring human intelligence.
+
+- Microsoft <cite>Azure AI Fundamentals[^4]</cite>:
+    
+    > AI is software that imitates human behaviours and capabilities.
+
+
+Curious how AI defines itself? 
+
+Here are definitions provided directly by prominent AI systems:
+
+- **ChatGPT (OpenAI)**
+
+  <div class="not-prose">
+    <a
+      href="https://chatgpt.com/?q=What%20is%20AI?&model=auto"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="bg-aimade-blue hover:bg-aimade-darkblue !text-white text-lg font-semibold rounded-lg px-8 py-3 shadow-md button-hover-effect transition-all duration-300 inline-block mt-3"
+    >
+      Ask ChatGPT: What is AI?
+    </a>
+  </div>
+
+- **Grok (xAI)**
+
+  <div class="not-prose">
+    <a
+      href="https://grok.com/?q=What%20is%20AI?"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="bg-aimade-blue hover:bg-aimade-darkblue !text-white text-lg font-semibold rounded-lg px-8 py-3 shadow-md button-hover-effect transition-all duration-300 inline-block mt-3"
+    >
+      Ask Grok: What is AI?
+    </a>
+  </div>
+
+- **Claude (Anthropic)**
+
+    <div class="not-prose">
+        <a
+        href="https://claude.ai/new?q=What%20is%20AI?"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="bg-aimade-blue hover:bg-aimade-darkblue !text-white text-lg font-semibold rounded-lg px-8 py-3 shadow-md button-hover-effect transition-all duration-300 inline-block mt-3"
+        >
+        Ask Claude: What is AI?
+        </a>
+    </div>
+
+- **Perplexity (Perplexity AI)**
+
+    <div class="not-prose">
+        <a
+        href="https://www.perplexity.ai/?q=What%20is%20AI?"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="bg-aimade-blue hover:bg-aimade-darkblue !text-white text-lg font-semibold rounded-lg px-8 py-3 shadow-md button-hover-effect transition-all duration-300 inline-block mt-3"
+        >
+        Ask Perplexity: What is AI?
+        </a>
+    </div>
+
+- **Gemini (Google)**
+  
+  <div class="not-prose">
+    <a
+      href="https://g.co/gemini/share/30275de9ad16"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="bg-aimade-blue hover:bg-aimade-darkblue !text-white text-lg font-semibold rounded-lg px-8 py-3 shadow-md button-hover-effect transition-all duration-300 inline-block mt-3"
+    >
+      Ask Gemini: What is AI?
+    </a>
+  </div>
+
+## Brief History of AI
+
+While the history of Artificial Intelligence has been closely intercoiled with the history of computing there are some significant points in history that are worth noting:
+
+**1950: Alan Turing publishes <cite>Computing Machinery and Intelligence[^5]</cite>**
+
+Relevance: A profound thought experiment to assess a machine's ability to exhibit intelligent behaviours indistinguishable from that of humans. Introduced the famous "Turing Test" i.e. "The Imitation Game", a crucial concept for evaluating machine intelligence and setting the early philosophical groundwork for AI.
+
+<div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 my-6">
+  <div class="flex">
+    <div class="ml-3">
+      <p class="text-sm text-yellow-700">
+        <strong>💡 Did You Know?</strong><br />
+        The Imitation Game (now known as the Turing Test) was first described as below by Alan Turning:
+
+        **🕹️  The Imitation Game Setup**
+        
+       _Three players:_
+
+        - _A (man)_
+        - _B (woman)_
+        - _C (interrogator) — of any gender._
+        
+        _Game mechanics:_
+        
+        _The interrogator (C) is in a separate room and communicates with A and B via a text-based interface (e.g., typewritten messages), so that physical voice or appearance gives no clues._
+        
+        _The goal of the interrogator is to determine which is the man and which is the woman._
+        
+        _The man (A) will try to deceive the interrogator, while the woman (B) will try to help the interrogator make the correct identification._
+        
+        _Turing's proposal:_
+        
+        _Replace player A (the man) with a machine._
+        
+        _Now the test becomes: Can the interrogator distinguish between the machine and the human (B)?_
+
+        **Barbara Grosz**, an AI pioneer on the topic of natural communication between people and machines, proposed a **modern version of the Turing Test** in 2012:
+
+        > A computer (agent) team member [that can] behave, over the long term and in uncertain, dynamic environments, in such a way that people on the team will not notice that it is not human.
+      </p>
+    </div>
+  </div>
+</div>
+
+**1951: Herbert Robbins and Sutton Monro publish <cite>A Stochastic Approximation Method[^6]</cite>**
+
+Relevance: Laid the mathematical groundwork for Stochastic Gradient Descent (SGD), an optimization algorithm that decades later became fundamental to training large neural networks.
+
+**1956: The landmark <cite>Dartmouth Summer Research Project on Artificial Intelligence[^7]</cite> is held. The 10 pioneering members of AI including John McCarthy, Marvin Miskey, Claude Shannon, Herber A Simon, Allen Newell and Nathaniel Rochester attended.**
+
+Relevance: Coined the term "Artificial Intelligence" and formally established AI as a distinct field of research, bringing together the founding figures of the Field.
+
+**1957: Allen Newell and Herbert A Simon develop the <cite>General Problem Solver (GPS)[^8]</cite>**
+
+Relevance: A landmark program in early "Symbolic AI", demonstrating how machines could solve general problems using logic and search
+
+**1958: Frank Rosenblatt introduces the <cite>Perceptron[^9]</cite>.**
+
+Relevance: An early algorithm for a single-layer neural network, laying foundational concepts for "Sub-Symbolic AI" and future neural network development.
+
+**1960s: AI research in the 1960s saw a divergence between symbolic (logic-based) and sub-symbolic (neural network) approaches.**
+
+Relevance: First signs of the first 'AI Winter'
+
+**1969: Marvin Minsky and Seymour Papert publish <cite>Perceptrons[^10]</cite>**
+
+Relevance: Highlighted critical limitations of early neural networks, particularly the lack of an algorithm which could sequential update the weights (parameters in a neural network). This significantly dampened enthusiasm and funding for neural network research (Sub Symbolic AI), contributing to the first 'AI Winter'.
+
+**1970s (Early): Foundational work on backpropagation**
+
+Relevance: <cite>Seppo Linnainmaa (1970)[^11]</cite> developed the core mathematics, and <cite>Paul Werbos (1974)[^12]</cite> proposed its use for training neural networks, laying vital groundwork for later breakthroughs.
+
+**1979: Douglas Hoftadter publishes <cite>Gödel, Escher, Bach: an Eternal Golden Braid[^13]</cite>**
+
+Relevance: This Pulitzer Prize-winning book explored themes of intelligence and consciousness, inspiring a new generation of AI researchers.
+
+**1986: David Rumelhart, Geoffrey Hinton, and Ronald Williams publish their paper on <cite>backpropagation[^14]</cite>.**
+
+Relevance: Popularised the backpropagation algorithm, providing an effective way to train multi-layer neural networks and overcoming earlier limitations. This was a crucial step for the resurgence of neural networks and modern deep learning.
+
+**1989: Yann LeCun and colleagues demonstrate early <cite>Convolutional Neural Networks (CNNs)[^15]</cite>**
+
+Relevance: Introduced the fundamental architecture of Convolutional Neural Networks (CNNs) and applied backpropagation to them, laying the groundwork for modern computer vision.
+
+**1997: <cite>IBM's Deep Blue defeats world chess champion Garry Kasparov[^16]</cite>.**
+
+Relevance: Showcased the power of symbolic AI, search algorithms, and specialised hardware to master complex strategic games capturing global attention.
+
+**1998: Yann LeCun, Léon Bottou, Yoshua Bengio, and Patrick Haffner publish <cite>Gradient-Based Learning Applied to Document Recognition[^17]</cite>**
+
+Relevance: This paper detailed the LeNet-5 architecture, a pioneering Convolutional Neural Network highly influential in image recognition, famously demonstrated on handwritten digit recognition (MNIST database) and setting a standard for future CNNs.
+
+**2000s: Classical machine learning methods like Support Vector Machines (SVMs) and decision trees become prominent.**
+
+Relevance: Before the deep learning boom, these algorithms were widely adopted for many practical applications, representing a period of significant AI progress.
+
+**2006: Geoffrey Hinton, Simon Osindero, and Yee-Whye publish on <cite>Deep Belief Networks[^18]</cite>**
+
+Relevance: Introduce an effective way to train deep neural architectures, considering a key catalyst that helped kickstart the "deep learning revolution"
+
+**2012: AlexNet wins the <cite>ImageNet Large Scale Visual Recognition Challenge (ILSVRC)[^19]</cite>**
+
+Relevance: Dramatically demonstrated the superiority of deep convolutional neural networks for computer vision, marking a turning point for AI and convincing many researchers to shift to deep learning.
+
+**2015: DeepMind and Demis Hassabis publish its paper on the <cite>deep Q-Network (DQN)[^20]</cite> in Nature.**
+
+Relevance: Achieved human-level control in many Atari games through deep reinforcement learning, a significant breakthrough for teaching machines complex behaviors
+
+**2016: DeepMind's <cite>AlphaGo defeats world Go champion Lee Sedol[^21]</cite>**
+
+Relevance: A major AI milestone, as Go's complexity far exceeds chess. AlphaGo's victory, using deep neural networks and reinforcement learning, showcases AI's rapidly and advancing capabilities in strategic thinking.
+
+**2017: Ashish Vaswani and a team at Google Brain introduce the <cite>Transformer architecture[^22]</cite>.**
+
+Relevance: The "Attention Is All You Need" paper revolutionized natural language processing (NLP) and became the foundation for most modern large language models (LLMs) due to its efficiency and parallel processing capabilities.
+
+**2018-2020: OpenAI releases GPT, GPT-2, and the GPT-3 API.**
+
+Relevance: This series of Generative Pre-trained Transformers demonstrated the power of scaling (larger models, more data) for language understanding and generation, culminating in GPT-3's impressive few-shot learning abilities and broad API access.
+
+**2021: OpenAI introduces CLIP, DALL·E, and Codex.**
+
+Relevance: Breakthroughs in multimodal AI (CLIP connecting text/images, DALL·E generating images from text) and code generation (Codex powering GitHub Copilot), expanding AI's creative and practical applications.
+
+**2022: OpenAI releases ChatGPT (based on GPT-3.5) and Whisper.**
+
+Relevance: ChatGPT made advanced conversational AI widely accessible, sparking global interest and demonstrating LLMs' potential to a broad audience. Whisper provided robust open-source speech recognition.
+
+
+## Types of AI
+
+There are many ways in which AI can be categorised, we will explore a number of types/classifications of AI:
+
+### I. By Intelligence Capability (How Smart It Is)
+
+This categorization shows how "intelligent" the AI is in comparison to human intelligence:
+1. **ANI – Artificial Narrow Intelligence (a.k.a. Weak AI)**
+    
+    Definition: AI that's good at one specific task.
+    
+    Examples: ChatGPT, Google Translate, Netflix recommendations, facial recognition.
+    
+    Limitations: Can't perform tasks outside its training or "switch" contexts.
+
+2. **AGI – Artificial General Intelligence (a.k.a. Strong AI)**
+
+    Definition: AI that can perform any intellectual task a human can do.
+
+    Examples: Still hypothetical. Think Iron Man's JARVIS or the movie Her.
+
+    Abilities: Can learn, reason, adapt, and generalize knowledge across domains.
+
+3. **ASI – Artificial Superintelligence**
+
+    Definition: AI that is smarter than the best human minds in every field.
+
+    Examples: Theoretical. Future concept—might have its own goals or consciousness.
+
+    Concerns: Raises ethical questions about control, alignment, and safety.
+
+### II. By Learning & Representation (How It Thinks or Learns)
+
+This explains how the AI works under the hood—how it reasons or makes decisions:
+1. **Symbolic AI (Rule-based or Logic-driven)**
+
+    Definition: Uses clearly defined rules and logic to make decisions.
+
+    Example: Expert systems, chess programs from the 1980s.
+
+    Analogy: Teaching a child "If it's raining, take an umbrella."
+
+2. **Sub-Symbolic AI (Learning-based)**
+
+    Definition: Learns from patterns in data rather than rules.
+    
+    Example: Neural networks, deep learning, computer vision.
+    
+    Analogy: Showing a child 10,000 pictures of cats until they recognize cats.
+
+### III. By Application Scope (Where It Can Be Used)**
+
+This shows how broadly the AI can apply its intelligence:
+1. **Narrow AI (Same as ANI)**
+
+    Focus: One domain, one problem.
+
+    Reality: All current commercial AI fits here.
+
+2. **General AI (Same as AGI)**
+
+    Focus: Any domain, like a human mind.
+
+    Reality: Still under research.
+
+3. **Super AI (Same as ASI)**
+
+    Focus: Beyond human capability.
+
+    Reality: Future speculation.
+
+**🔁 Quick Mapping**
+
+| Capability Type | Intelligence    | Learning Approach        | Scope         | Status         |
+|-----------------|-----------------|--------------------------|---------------|----------------|
+| ANI             | Weak/Narrow     | Symbolic or Sub-symbolic | Task-specific | Already exists |
+| AGI             | General         | Likely Sub-symbolic      | Broad         | In development |
+| ASI             | Superhuman      | Unknown                  | Universal     | Theoretical    |
+
+## Key Terms
+
+This section focuses on some of key terms an AI practitioner should be familiar with. We have tried to cover some of the common jargon so that the readers can be familiar with AI and can hold themselves in a technical conversation.
+
+**Machine Learning:** 
+
+Machine Learning is a subfield of Artificial Intelligence. The fundamental idea of Machine Learning is to use data from past observations and learn to predict future outcomes or recognise patterns.
+
+**Supervised Machine Learning:** 
+
+Machine Learning where algorithms learn from labelled datasets. For example: Predicting house prices based on historical data (regression), classifying emails as 'spam' or 'not spam'(Classification), and facial recognition(Classification).
+
+**Unsupervised Machine Learning:** 
+
+Machine Learning methods that identify patterns or groupings in datasets without explicit labels or pre-existing answers. For example: Grouping customers based on buying behaviour (Clustering), recommending products to users based on similar preferences (Collaborative Filtering)
+
+**Semi-supervised learning:** 
+
+A blend of supervised and unsupervised learning, using both labelled and unlabeled data to train algorithms. For example: Large Language Models
+
+**Deep Learning:** 
+
+Deep Learning is an advanced subfield of Machine Learning that tries to emulate how the human brain works. At its core are artificial Neural Networks, mathematical models designed to mimic the electrochemical signals transmitted by biological neurons.
+
+Broadly, Deep Learning methods fall  into two categories:
+
+_Discriminative Deep Learning: Models that classify or distinguish data into predefined categories. For example: recognising objects within images_
+
+_Generative Deep Learning: Models capable of creating new content based on learned patterns. For example: Large Language Models (LLMs) such as ChatGPT or Gemini that generate coherent and contextually relevant text._
+
+**Neural Networks:** 
+
+Networks of interconnected Artificial Neurons designed to mimic biological brain structure. It is essentially defining deeply nested functions. They're fundamental to Deep Learning
+
+**Generative AI:** 
+
+Generative AI (or GenAI) is a type of artificial intelligence that creates new content based on what it has learned from existing content. A sub field of Deep Learning.
+
+**Computer Vision:** 
+An AI that enables computers to interpret and understand visual information (like images or videos)
+
+**Natural Language Processing:** 
+
+An AI disciple that helps computers understand, interpret, and generate human language.
+
+**Large Language Models (LLMSs):** 
+
+Specialised type of machine learning models that you can use to perform natural language processing (NLP) tasks. These models are trained on vast amount of text data to understand, generate, and interact naturally using human language (e.g. GPT - Generative PreTrained Transformers)
+
+**Convolution Neural Networks (CNNs):** 
+
+Specialised type of Neural Networks particularly suited for image and video processing tasks, capable of recognising patterns such as shapes, edges, and colours.
+
+**Transformers:** 
+
+Neural Network architecture especially effective at handling text data, which uses 'attention mechanisms' to understand context and relationships within data.
+
+Transformer model architecture consists of two components or blocks: 
+
+_Encoder block - creates semantic representations of the training vocabulary._ 
+
+_Decoder block: Generates new language sequences._
+
+**Token:** 
+
+A basic unit of text, such as a word or part of a word, used as an input to language models.
+
+**Tokenization:** 
+
+The process of decomposing text into tokens, making it easier for AI models to process language.
+
+**Embeddings:** 
+
+Embeddings are numerical representations (vectors) of words or tokens that capture their semantic meanings. Each dimension in an embedding corresponds to specific attributes or relationships, meaning words frequently used in similar contexts have embeddings that are closer together. In simple terms, embeddings help AI models understand and represent relationships between words based on their usage and context.
+
+**Foundational Model:** 
+
+A pre-trained general model on which you can build multiple adaptive models for specialist tasks. A foundation model is a large AI model trained on a vast quantity of data designed to be adapted or fine-tuned to a wide range of downstream tasks.
+
+**Attention:** 
+
+Attention is a layer (in a transformer) that is used in both the encoder and decoder block. It is a technique used to examine a sequence of text tokens and try to quantify the strength of the relationship between them. In particular self-attention involves considering how other tokens around one particular token influence that token's meaning.
+
+Footnotes:
+
+[^1]: [Herbert A. Simon, Artificial intelligence: an empirical science, Artificial Intelligence, Volume 77, Issue 1, 1995,
+Pages 95-27, ISSN 0004-3702](https://doi.org/10.1016/0004-3702(95)00039-H).
+[^2]: [Nils J. Nilsson, The Quest for Artificial Intelligence: A History of Ideas and Achievements, 2010](https://ai.stanford.edu/~nilsson/QAI/qai.pdf).
+[^3]: [Google, Introduction to Generative AI](https://www.cloudskillsboost.google/course_templates/536).
+[^4]: [Microsoft, Azure AI Fundamentals](https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-fundamentals/).
+[^5]: [Alan Turing, Computing Machinery and Intelligence, 1950](https://www.csee.umbc.edu/courses/471/papers/turing.pdf).
+[^6]: [Herbert Robbins and Sutton Monro, A Stochastic Approximation Method, 1951](https://www.jstor.org/stable/2332043).
+[^7]: [John McCarthy, Marvin Miskey, Claude Shannon, and Nathaniel Rochester, Dartmouth Summer Research Project on Artificial Intelligence, 1956](http://jmc.stanford.edu/articles/dartmouth/dartmouth.pdf).
+[^8]: [Allen Newell and Herbert A Simon, General Problem Solver, 1957](https://stacks.stanford.edu/file/druid:zk239tp3547/zk239tp3547.pdf).
+[^9]: [Frank Rosenblatt, The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain, 1958](https://www.ling.upenn.edu/courses/cogs501/Rosenblatt1958.pdf).
+[^10]: [Marvin Minsky and Seymour Papert, Perceptrons, 1969](https://rodsmith.nz/wp-content/uploads/Minsky-and-Papert-Perceptrons.pdf).
+[^11]: [Seppo Linnainmaa, On the Computational Complexity of Optimizing and Learning in Feedforward Neural Networks, 1970](https://www.sciencedirect.com/science/article/pii/000437029500039H).
+[^12]: [Paul Werbos, Beyond Regression: New Tools for Prediction and Analysis in the Behavioral Sciences, 1974](https://www.sciencedirect.com/science/article/pii/000437029500039H).
+[^13]: [Douglas Hofstadter, Gödel, Escher, Bach: an Eternal Golden Braid, 1979](https://www.amazon.com/G%C3%B6del-Escher-Bach-Eternal-Golden/dp/0465026567).
+[^14]: [David Rumelhart, Geoffrey Hinton, and Ronald Williams, Learning Representations by Back-propagating Errors, 1986](https://www.nature.com/articles/323533a0).
+[^15]: [Yann LeCun, Léon Bottou, Yoshua Bengio, and Patrick Haffner, Gradient-Based Learning Applied to Document Recognition, 1989](https://ieeexplore.ieee.org/document/157606).
+[^16]: [Garry Kasparov, Deep Blue, 1997](https://www.ibm.com/history/deep-blue).
+[^17]: [Yann LeCun, Léon Bottou, Yoshua Bengio, and Patrick Haffner, Gradient-Based Learning Applied to Document Recognition, 1998](https://ieeexplore.ieee.org/document/726791).
+[^18]: [Geoffrey Hinton, Simon Osindero, and Yee-Whye Teh, A fast learning algorithm for deep belief nets, 2006](https://www.cs.toronto.edu/~hinton/absps/fastnc.pdf).
+[^19]: [AlexNet, ImageNet Large Scale Visual Recognition Challenge, 2012](https://papers.nips.cc/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html).
+[^20]: [DeepMind and Demis Hassabis, Playing Atari with Deep Reinforcement Learning, 2015](https://www.nature.com/articles/nature14236).
+[^21]: [DeepMind and Demis Hassabis, AlphaGo, 2016](https://www.nature.com/articles/nature16961).
+[^22]: [Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Łukasz Kaiser, and Illia Polosukhin, Attention Is All You Need, 2017](https://arxiv.org/abs/1706.03762).
