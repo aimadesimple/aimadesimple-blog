@@ -8,7 +8,7 @@ import rehypePrismPlus from 'rehype-prism-plus';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://example.com',
+  site: 'https://blog.aimadesimple.online',
   markdown: {
     shikiConfig: {
       theme: 'github-dark',
