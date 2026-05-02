@@ -7,6 +7,37 @@ tags: ['post', 'AI', 'Mobile', 'Tutorial']
 featured: false
 ---
 
+export const StepImage = ({ src, alt, src2, alt2 }) => (
+  <div className="not-prose my-8 flex justify-center">
+    <div className="w-full max-w-3xl rounded-lg shadow-md bg-gray-50 ring-1 ring-gray-100">
+      <div
+        className={
+          src2
+            ? 'flex h-[336px] w-full flex-wrap items-center justify-center gap-4 px-3 py-2 sm:h-[399px] sm:gap-6 md:h-[462px] md:gap-8'
+            : 'flex h-[336px] w-full items-center justify-center px-3 py-2 sm:h-[399px] md:h-[462px]'
+        }
+      >
+        <img
+          src={src}
+          alt={alt}
+          className="max-h-full max-w-full object-contain"
+          loading="lazy"
+          decoding="async"
+        />
+        {src2 ? (
+          <img
+            src={src2}
+            alt={alt2}
+            className="max-h-full max-w-full object-contain"
+            loading="lazy"
+            decoding="async"
+          />
+        ) : null}
+      </div>
+    </div>
+  </div>
+);
+
 **Edge devices** are the new frontier of artificial intelligence. **Local (on-device) models** let you personalise context and reduce reliance on cloud infrastructure and third-party servers. They support **digital sovereignty**: you stay in control of your data and your time.
 
 In a mobile-first AI era, these models run natively on your handheld hardware. You can use capable models **without the internet** or **paid subscriptions** to providers such as OpenAI or Anthropic.
@@ -19,37 +50,19 @@ Below is a compact walkthrough for turning this on **using Google AI Edge Galler
 
 Install **Google AI Edge Gallery** from the [Google Play Store](https://play.google.com/store/apps/details?id=com.google.ai.edge.gallery) (Android) or the [App Store](https://apps.apple.com/us/app/google-ai-edge-gallery/id6749645337) (iOS).
 
-<div class="not-prose my-8 flex justify-center">
-  <div class="w-full max-w-3xl rounded-lg shadow-md bg-gray-50 ring-1 ring-gray-100">
-    <div class="flex h-[320px] w-full items-center justify-center px-3 py-2 sm:h-[380px] md:h-[440px]">
-      <img
-        src="/blog/how-to-run-local-model-on-mobile/step-01-play-store.png"
-        alt="Google AI Edge Gallery on the Play Store — tap Install"
-        class="max-h-full max-w-full object-contain"
-        loading="lazy"
-        decoding="async"
-      />
-    </div>
-  </div>
-</div>
+<StepImage
+  src="/blog/how-to-run-local-model-on-mobile/step-01-play-store.png"
+  alt="Google AI Edge Gallery on the Play Store — tap Install"
+/>
 
 ## 2. Open the app and pick a use case
 
 Open **Google AI Edge Gallery**. You will see a grid of **use cases** to explore.
 
-<div class="not-prose my-8 flex justify-center">
-  <div class="w-full max-w-3xl rounded-lg shadow-md bg-gray-50 ring-1 ring-gray-100">
-    <div class="flex h-[320px] w-full items-center justify-center px-3 py-2 sm:h-[380px] md:h-[440px]">
-      <img
-        src="/blog/how-to-run-local-model-on-mobile/step-02-use-cases.png"
-        alt="Google AI Edge Gallery home screen showing available use cases"
-        class="max-h-full max-w-full object-contain"
-        loading="lazy"
-        decoding="async"
-      />
-    </div>
-  </div>
-</div>
+<StepImage
+  src="/blog/how-to-run-local-model-on-mobile/step-02-use-cases.png"
+  alt="Google AI Edge Gallery home screen showing available use cases"
+/>
 
 ## 3. Choose **AI Chat**
 
@@ -59,79 +72,38 @@ For this guide, select **AI Chat** so you can converse with a model running loca
 
 After opening **AI Chat**, you will see a list of **model** options you can download and run on-device.
 
-<div class="not-prose my-8 flex justify-center">
-  <div class="w-full max-w-3xl rounded-lg shadow-md bg-gray-50 ring-1 ring-gray-100">
-    <div class="flex h-[320px] w-full items-center justify-center px-3 py-2 sm:h-[380px] md:h-[440px]">
-      <img
-        src="/blog/how-to-run-local-model-on-mobile/step-04-model-list.gif"
-        alt="List of models available inside AI Chat"
-        class="max-h-full max-w-full object-contain"
-        loading="lazy"
-        decoding="async"
-      />
-    </div>
-  </div>
-</div>
+<StepImage
+  src="/blog/how-to-run-local-model-on-mobile/step-04-model-list.gif"
+  alt="List of models available inside AI Chat"
+/>
 
 ## 5. Download a model
 
 Tap **Download** on the model card you want. The app will fetch the weights and assets needed for local inference.
 
-<div class="not-prose my-8 flex justify-center">
-  <div class="w-full max-w-3xl rounded-lg shadow-md bg-gray-50 ring-1 ring-gray-100">
-    <div class="flex h-[320px] w-full items-center justify-center px-3 py-2 sm:h-[380px] md:h-[440px]">
-      <img
-        src="/blog/how-to-run-local-model-on-mobile/step-05-download-model.png"
-        alt="Download button on a model card"
-        class="max-h-full max-w-full object-contain"
-        loading="lazy"
-        decoding="async"
-      />
-    </div>
-  </div>
-</div>
+<StepImage
+  src="/blog/how-to-run-local-model-on-mobile/step-05-download-model.png"
+  alt="Download button on a model card"
+/>
 
 ## 6. Launch the chat experience
 
 When the download finishes, you are ready to chat with your **local** model. Inference stays on your device—**including in airplane mode**. Tap **Try it** to open the chat UI.
 
-<div class="not-prose my-8 flex justify-center">
-  <div class="w-full max-w-3xl rounded-lg shadow-md bg-gray-50 ring-1 ring-gray-100">
-    <div class="flex h-[320px] w-full items-center justify-center px-3 py-2 sm:h-[380px] md:h-[440px]">
-      <img
-        src="/blog/how-to-run-local-model-on-mobile/step-06-try-it.png"
-        alt="Try it — open the on-device chat after the model is ready"
-        class="max-h-full max-w-full object-contain"
-        loading="lazy"
-        decoding="async"
-      />
-    </div>
-  </div>
-</div>
+<StepImage
+  src="/blog/how-to-run-local-model-on-mobile/step-06-try-it.png"
+  alt="Try it — open the on-device chat after the model is ready"
+/>
 
 ## 7. Chat with your local model
 
 You can now chat—for example with **Gemma** family models—**entirely on your device**, with no round trip to the cloud for generation.
 
-<div class="not-prose my-8 flex justify-center">
-  <div class="w-full max-w-3xl rounded-lg shadow-md bg-gray-50 ring-1 ring-gray-100">
-    <div class="flex h-[320px] w-full flex-wrap items-center justify-center gap-4 px-3 py-2 sm:h-[380px] sm:gap-6 md:h-[440px] md:gap-8">
-      <img
-        src="/blog/how-to-run-local-model-on-mobile/step-07a-chat-local.png"
-        alt="Chatting with a downloaded model (e.g. Gemma) offline on device — view 1"
-        class="max-h-full max-w-full object-contain"
-        loading="lazy"
-        decoding="async"
-      />
-      <img
-        src="/blog/how-to-run-local-model-on-mobile/step-07b-chat-local-reply.png"
-        alt="Chatting with a downloaded model (e.g. Gemma) offline on device — view 2"
-        class="max-h-full max-w-full object-contain"
-        loading="lazy"
-        decoding="async"
-      />
-    </div>
-  </div>
-</div>
+<StepImage
+  src="/blog/how-to-run-local-model-on-mobile/step-07a-chat-local.png"
+  alt="Chatting with a downloaded model (e.g. Gemma) offline on device — view 1"
+  src2="/blog/how-to-run-local-model-on-mobile/step-07b-chat-local-reply.png"
+  alt2="Chatting with a downloaded model (e.g. Gemma) offline on device — view 2"
+/>
 
 For more information, see the [Google AI Edge Gallery documentation](https://github.com/google-ai-edge/gallery/wiki).
