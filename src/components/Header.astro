@@ -1,6 +1,4 @@
 ---
-import HeaderLink from './HeaderLink.astro';
-import { SITE_TITLE } from '../consts';
 // Header component using the existing styles and structure from the rest of your application
 ---
 
@@ -14,14 +12,27 @@ import { SITE_TITLE } from '../consts';
         class="h-10 w-auto"
       />
     </a>
-    
-    <!-- Support Button -->
-    <a 
-      href="https://aimadesimple.online/#support" 
-      class="bg-aimade-blue hover:bg-aimade-darkblue text-white rounded-lg px-6 py-2.5 font-medium button-hover-effect transition-all duration-300"
-    >
-      Support
-    </a>
+
+    <!-- X (Making AI Simple) + Support -->
+    <div class="flex items-center gap-2 shrink-0">
+      <a
+        href="https://x.com/makingAISimple"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center rounded-full p-2.5 text-gray-700 transition-colors hover:bg-gray-100 hover:text-aimade-green focus:outline-none focus-visible:ring-2 focus-visible:ring-aimade-green focus-visible:ring-offset-2"
+        aria-label="Making AI Simple on X"
+      >
+        <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+        </svg>
+      </a>
+      <a
+        href="https://aimadesimple.online/#support"
+        class="bg-aimade-blue hover:bg-aimade-darkblue text-white rounded-lg px-6 py-2.5 font-medium button-hover-effect transition-all duration-300"
+      >
+        Support
+      </a>
+    </div>
   </div>
 </header>
 
