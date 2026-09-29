@@ -7,36 +7,7 @@ tags: ['post', 'AI', 'Mobile', 'Tutorial']
 featured: false
 ---
 
-export const StepImage = ({ src, alt, src2, alt2 }) => (
-  <div className="not-prose my-8 flex justify-center">
-    <div className="w-full max-w-3xl rounded-lg shadow-md bg-gray-50 ring-1 ring-gray-100">
-      <div
-        className={
-          src2
-            ? 'flex h-[336px] w-full flex-wrap items-center justify-center gap-4 px-3 py-2 sm:h-[399px] sm:gap-6 md:h-[462px] md:gap-8'
-            : 'flex h-[336px] w-full items-center justify-center px-3 py-2 sm:h-[399px] md:h-[462px]'
-        }
-      >
-        <img
-          src={src}
-          alt={alt}
-          className="max-h-full max-w-full object-contain"
-          loading="lazy"
-          decoding="async"
-        />
-        {src2 ? (
-          <img
-            src={src2}
-            alt={alt2}
-            className="max-h-full max-w-full object-contain"
-            loading="lazy"
-            decoding="async"
-          />
-        ) : null}
-      </div>
-    </div>
-  </div>
-);
+import StepImage from '../../components/StepImage.astro';
 
 **Edge devices** are the new frontier of artificial intelligence. **Local (on-device) models** let you personalise context and reduce reliance on cloud infrastructure and third-party servers. They support **digital sovereignty**: you stay in control of your data and your time.
 

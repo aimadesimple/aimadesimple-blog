@@ -1,4 +1,25 @@
-# Astro Starter Kit: Blog
+# AI Made Simple Blog
+
+## Local development
+
+Use Node.js 24 LTS (`nvm use`); Astro requires Node.js 22.12.0 or newer.
+Run `npm ci`, `npm run dev`, then `npm run build` and `npm run preview`
+to verify a production build. Build environments must install dev dependencies
+because Tailwind is required to generate CSS.
+
+The site uses Astro 7 with the remark/rehype Markdown pipeline and Tailwind 4
+through `@tailwindcss/vite` and the legacy `tailwind.config.ts` theme. Keep
+`tailwind-merge` aligned to Tailwind 4 (version 3).
+Astro manages Vite; do not add a separate Vite version to patch its dependency.
+The CMS entry point is `src/pages/admin.astro`; keep `public/admin/` for its
+configuration only to avoid overriding that route.
+
+`decap-server` is local development tooling (`npx decap-server`). Its upstream
+`@hapi/joi` dependency currently has a low-severity advisory with no npm fix;
+recheck `npm audit` when updating it. `npm audit --omit=dev` checks the
+production dependency subset, not the separately CDN-loaded CMS scripts.
+
+## Original starter documentation
 
 ```sh
 npm create astro@latest -- --template blog

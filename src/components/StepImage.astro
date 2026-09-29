@@ -1,0 +1,38 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  src2?: string;
+  alt2?: string;
+}
+
+const { src, alt, src2, alt2 } = Astro.props;
+---
+
+<div class="not-prose my-8 flex justify-center">
+  <div class="w-full max-w-3xl rounded-lg bg-gray-50 shadow-md ring-1 ring-gray-100">
+    <div
+      class:list={[
+        'flex h-[336px] w-full items-center justify-center px-3 py-2 sm:h-[399px] md:h-[462px]',
+        src2 && 'flex-wrap gap-4 sm:gap-6 md:gap-8',
+      ]}
+    >
+      <img
+        src={src}
+        alt={alt}
+        class="max-h-full max-w-full object-contain"
+        loading="lazy"
+        decoding="async"
+      />
+      {src2 && (
+        <img
+          src={src2}
+          alt={alt2 ?? ''}
+          class="max-h-full max-w-full object-contain"
+          loading="lazy"
+          decoding="async"
+        />
+      )}
+    </div>
+  </div>
+</div>
