@@ -1,0 +1,312 @@
+---
+interface Turn {
+  speaker: 'user' | 'assistant';
+  text: string;
+}
+
+interface Props {
+  title: string;
+  turns: Turn[];
+}
+
+const { title, turns } = Astro.props;
+const uid = `conversation-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+---
+
+<section class="chat-demo not-prose" tabindex="0" aria-labelledby={`${uid}-title`}>
+  <header class="chat-header">
+    <div>
+      <p class="chat-eyebrow">AIMS-1-128M-it</p>
+      <h3 id={`${uid}-title`}>{title}</h3>
+    </div>
+    <button class="replay-button" type="button" aria-label={`Replay ${title} conversation`}>
+      Replay
+    </button>
+  </header>
+
+  <div class="chat-messages" aria-hidden="true">
+    {turns.map((turn, index) => (
+      <div class:list={['turn', turn.speaker]} data-turn data-speaker={turn.speaker} data-index={index}>
+        {turn.speaker === 'assistant' && (
+          <span class="assistant-name" aria-hidden="true">AIMS-1</span>
+        )}
+        <p class="message"><span class="typed-text" data-text={turn.text}></span></p>
+        {turn.speaker === 'assistant' && (
+          <span class="typing-indicator" aria-hidden="true">
+            <i></i><i></i><i></i>
+          </span>
+        )}
+      </div>
+    ))}
+  </div>
+
+  <div class="sr-only" aria-label="Full conversation transcript">
+    {turns.map((turn) => <p><strong>{turn.speaker === 'user' ? 'User' : 'AIMS-1'}:</strong> {turn.text}</p>)}
+  </div>
+  <p class="chat-hint" aria-hidden="true">Focus or hover to play the conversation</p>
+</section>
+
+<style>
+  .chat-demo {
+    --chat-bg: #101827;
+    --chat-panel: #182235;
+    --chat-line: #2c3a50;
+    --chat-accent: #00a878;
+    margin-block: 2rem;
+    overflow: hidden;
+    border: 1px solid #dfe5eb;
+    border-radius: 1rem;
+    background: var(--chat-bg);
+    color: #f8fafc;
+    box-shadow: 0 8px 24px rgb(15 23 42 / 12%);
+  }
+
+  .chat-demo:focus-visible {
+    outline: 3px solid #2684ff;
+    outline-offset: 4px;
+  }
+
+  .chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--chat-line);
+  }
+
+  .chat-eyebrow {
+    margin: 0 0 0.2rem;
+    color: #6ee7bd;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .chat-header h3 {
+    margin: 0;
+    color: #f8fafc;
+    font-size: 1.05rem;
+    font-weight: 650;
+  }
+
+  .replay-button {
+    flex: none;
+    border: 1px solid #46556c;
+    border-radius: 0.5rem;
+    background: var(--chat-panel);
+    padding: 0.4rem 0.75rem;
+    color: #f8fafc;
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+
+  .replay-button:hover {
+    background: #26344a;
+  }
+
+  .replay-button:focus-visible {
+    outline: 2px solid #6ee7bd;
+    outline-offset: 2px;
+  }
+
+  .chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-height: 9rem;
+    padding: 1.25rem;
+  }
+
+  .turn {
+    display: flex;
+    max-width: 86%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .turn.user {
+    align-self: flex-end;
+    align-items: flex-end;
+  }
+
+  .message {
+    margin: 0;
+    border: 1px solid var(--chat-line);
+    border-radius: 1rem 1rem 1rem 0.3rem;
+    background: var(--chat-panel);
+    padding: 0.75rem 1rem;
+    color: #f1f5f9;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+
+  .user .message {
+    border-color: #087f67;
+    border-radius: 1rem 1rem 0.3rem 1rem;
+    background: #087f67;
+    color: white;
+  }
+
+  .assistant-name {
+    margin: 0 0 0.35rem 0.2rem;
+    color: #6ee7bd;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .typing-indicator {
+    display: none;
+    gap: 0.23rem;
+    align-items: center;
+    min-height: 2rem;
+    margin-top: 0.35rem;
+    padding-inline: 0.75rem;
+  }
+
+  .typing-indicator i {
+    width: 0.38rem;
+    height: 0.38rem;
+    border-radius: 50%;
+    background: #93a4bb;
+    animation: typing-bounce 0.9s infinite ease-in-out;
+  }
+
+  .typing-indicator i:nth-child(2) { animation-delay: 0.12s; }
+  .typing-indicator i:nth-child(3) { animation-delay: 0.24s; }
+
+  .turn.is-typing .typing-indicator { display: inline-flex; }
+  .turn.is-typing .message { display: none; }
+
+  .chat-hint {
+    margin: 0;
+    padding: 0 1.25rem 1rem;
+    color: #93a4bb;
+    font-size: 0.78rem;
+    text-align: center;
+  }
+
+  @keyframes typing-bounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.55; }
+    30% { transform: translateY(-0.25rem); opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .typing-indicator i { animation: none; }
+  }
+</style>
+
+<script>
+  const graphemes = (text: string) => Array.from(text);
+
+  document.querySelectorAll<HTMLElement>('.chat-demo').forEach((demo) => {
+    if (demo.dataset.animationReady) return;
+    demo.dataset.animationReady = 'true';
+
+    const turns = Array.from(demo.querySelectorAll<HTMLElement>('[data-turn]'));
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let timers: number[] = [];
+    let runId = 0;
+
+    const clearTimers = () => {
+      timers.forEach(window.clearTimeout);
+      timers = [];
+    };
+
+    const wait = (callback: () => void, delay: number, id: number) => {
+      const timer = window.setTimeout(() => {
+        if (id === runId) callback();
+      }, delay);
+      timers.push(timer);
+    };
+
+    const showAll = () => {
+      turns.forEach((turn) => {
+        turn.classList.remove('is-typing');
+        turn.classList.add('is-visible');
+        const text = turn.querySelector<HTMLElement>('[data-text]');
+        if (text) text.textContent = text.dataset.text ?? '';
+      });
+      demo.classList.remove('is-playing');
+    };
+
+    const play = () => {
+      runId += 1;
+      const id = runId;
+      clearTimers();
+      if (reducedMotion.matches) {
+        showAll();
+        return;
+      }
+
+      demo.classList.add('is-playing');
+      turns.forEach((turn) => {
+        turn.classList.remove('is-visible', 'is-typing');
+        const text = turn.querySelector<HTMLElement>('[data-text]');
+        if (text) text.textContent = '';
+      });
+
+      let index = 0;
+      const advance = () => {
+        if (id !== runId || index >= turns.length) {
+          demo.classList.remove('is-playing');
+          return;
+        }
+
+        const turn = turns[index];
+        const speaker = turn.dataset.speaker;
+        const text = turn.querySelector<HTMLElement>('[data-text]');
+        if (!text) return;
+
+        const typeMessage = () => {
+          turn.classList.remove('is-typing');
+          turn.classList.add('is-visible');
+          const chars = graphemes(text.dataset.text ?? '');
+          let charIndex = 0;
+          const typeNext = () => {
+            if (id !== runId) return;
+            if (charIndex < chars.length) {
+              text.textContent += chars[charIndex++];
+              wait(typeNext, 25, id);
+            } else {
+              index += 1;
+              wait(advance, speaker === 'assistant' ? 460 : 320, id);
+            }
+          };
+          typeNext();
+        };
+
+        if (speaker === 'assistant') {
+          turn.classList.add('is-typing');
+          wait(typeMessage, 650, id);
+        } else {
+          typeMessage();
+        }
+      };
+
+      advance();
+    };
+
+    demo.addEventListener('pointerenter', play);
+    demo.addEventListener('focusin', play);
+    demo.addEventListener('click', (event) => {
+      if ((event.target as HTMLElement).closest('.replay-button')) play();
+    });
+    demo.addEventListener('pointerleave', () => {
+      if (!demo.contains(document.activeElement)) {
+        runId += 1;
+        clearTimers();
+      }
+    });
+    demo.addEventListener('focusout', (event) => {
+      if (!demo.contains(event.relatedTarget as Node | null)) {
+        runId += 1;
+        clearTimers();
+      }
+    });
+
+    if (reducedMotion.matches) showAll();
+  });
+</script>

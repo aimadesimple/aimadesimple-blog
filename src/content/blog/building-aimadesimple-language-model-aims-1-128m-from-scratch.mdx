@@ -1,0 +1,645 @@
+---
+title: 'Building AIMS-1 from Scratch: A 128M Parameter Language Model on a $200 Budget'
+description: 'Follow the journey of building AIMS-1-128M from scratch, covering data preparation, tokenization, model architecture, training, evaluation, and lessons learned.'
+pubDate: 'Oct 1 2026'
+heroImage: '/blog/building-aimadesimple-language-model-aims-1-128m-from-scratch/AIMS-1_Blog_Cover_Banner.png'
+tags: ['post', 'AI', 'Language Models', 'AIMS-1-128M']
+featured: false
+---
+
+import ConversationDemo from '../../components/ConversationDemo.astro';
+
+{/* Images: public/blog/building-aimadesimple-language-model-aims-1-128m-from-scratch/ */}
+
+## Introduction
+
+Building a Language Model from scratch has been a core goal for AIMadeSimple from its inception. For a bootstrapped home research lab with a shoestring budget, this was always an ambitious project.
+
+It is, thus, a significant achievement for us to be able to introduce the [AIMS-1 128M base](https://huggingface.co/AIMadeSimpleResearch/AIMS-1-128M-base) and [instruction finetune](https://huggingface.co/AIMadeSimpleResearch/AIMS-1-128M-it) Language Models.
+
+The AIMS - 1 128M parameter model is built on a $200 budget with a custom architecture, trained completely from scratch and finetuned to have simple conversations in English.
+
+> **Note:** We don’t claim it to be a SOTA Language Model, it doesn’t incorporate reasoning abilities. It is only able to have simple conversations and will not be able to answer factual questions or do any mathematics or reasoning.
+
+This blog documents the journey of building AIMS - 1.
+
+You can try the AIMS-1-128M-it model in the [AIMS-1 Small Model Playground](https://huggingface.co/spaces/AIMadeSimpleResearch/AIMS-1-128M-it-demo).
+
+## In This Blog
+
+- Our [first attempt in Q4 2025](#attempt-1--q4-2025-lessons-learned) stalled amid unclear goals, limited resources, and difficult architecture and dataset choices. We share what went wrong and what we learned.
+- Our [second attempt in Q3 2026](#attempt-2--q3-2026-a-new-approach) began with clearer objectives and a practical roadmap, shaped by [baseline experiments](#baseline-pretraining-experiments) and [research on small language models](#exploring-more-resources-and-research).
+- We explain how we [built AIMS-1-128M](#building-the-aims-1-128m-language-model), from its [custom architecture](#final-model-architecture) to a [BabyLM training curriculum](#pretraining-dataset-and-curriculum), within a $200 training budget.
+- The [evaluation results](#evaluation-results) show the model's linguistic strengths and limitations. We then describe [fine-tuning for everyday conversations](#supervised-fine-tuning-for-everyday-conversations) and share [sample exchanges](#example-conversations).
+- We [reflect on the outcome](#conclusion) and outline [next steps](#next-steps), including a larger model, preference alignment, tool calling, and simple reasoning.
+- For readers building their own models, the appendices collect our [learning resources](#appendix-1-useful-resources), a [guide to uploading to Hugging Face](#appendix-2-uploading-to-hugging-face), and notes on our [training environment](#appendix-3-training-environment).
+
+## Attempt 1 — Q4 2025: Lessons Learned
+
+Our first attempt at building a Language Model in the final quarter of 2025 was unsuccessful. We struggled to find a clear starting point and we never quite found our footing.
+
+Amidst the popular narratives in the AI space, claiming that building Language Models required exponential budgets and insurmountable barriers (especially for a home research lab), we decided to drop the project altogether by the end of 2025.
+
+We took the first quarter of 2026 off, to explore other areas and determine where we could contribute the most.
+
+This time also gave us a chance to reflect on what went wrong and, if and how we could take another stab at this goal.
+
+Below is a summary of our reflections and our takeaways from this first attempt:
+
+- **Lack of Clear Direction and a Roadmap**
+
+  There is plenty of information and material available that attempts to explain how someone can build language models from scratch. These include popular resources like [Sebastian Raschka’s Building a Large Language Model from Scratch Book + accompanying resources](https://sebastianraschka.com/llms-from-scratch/) and [Andrej Karpathy’s NanoGPT](https://github.com/karpathy/nanogpt).
+
+  Most (if not all) of these resources provide a solid foundation, but they leave off before you can reach a truly coherent language model, built and trained from scratch. Their primary advice is to use existing models by downloading their pre-trained weights and fine tuning them for a specific use case.
+
+- **Time, Money, and Hardware Constraints**
+
+  The traditional narrative around building a foundation model from scratch suggests it requires millions/billions of dollars, vast clusters of GPUs, and months of training time typical of frontier labs.
+
+  This is a daunting hurdle for a bootstrapped home-lab operating on a shoestring budget, roughly five to six orders of magnitude smaller—a factor of 10⁵ to 10⁶ (100,000 to 1,000,000 times smaller)—than those of the frontier labs.
+
+  AIMadeSimple’s resources were restricted to a maximum of $500 and a single GPU.
+
+- **Picking a Model Architecture**
+
+  Frontier research in Artificial Intelligence has advanced at an exponential pace over the past few years, with most mainstream progress originating from leading research labs. Notably, the definition of Large Language Models (LLMs) has evolved. In 2019, OpenAI described GPT-2 (125M parameters) as a large language model, whereas today’s LLMs scale to trillions of parameters.
+
+  Determining the appropriate parameter count and model architecture for our constraints was a critical challenge. Most documented efforts in training small language models rely on GPT-2, OPT, or other recent architectures. Evaluating which design choices and components scale effectively down to smaller parameter regimes required careful analysis.
+
+  A lack of clear guidance on model architectures for small-scale models was a key hurdle during our initial attempt.
+
+- **Dataset Curation and Availability**
+
+  Given that most foundation models are built by labs with substantial budgets and the focus of smaller labs is on fine-tuning, most popular datasets are focused on Supervised Fine-Tuning (SFT).
+
+  Datasets suitable for pre-training models in the 50M to 200M parameter range are less widely covered and require dedicated research and careful curation.
+
+- **Lack of Defined Research Objectives**
+
+  We failed to establish clear research objectives during our first attempt. Feeling overwhelmed by the scope of the project and the scarcity of practical guidance, we struggled to maintain focus and direction.
+
+- **Isolation in a Field Dominated by Giants**
+
+  Since the most prominent voices in AI belong to massive frontier labs, embarking on a project like this as a single person home lab can feel profoundly isolating.
+
+  However, that perspective changes once you connect with the broader research community and realize others are striving toward similar goals.
+
+### Returning to the Project
+
+Following this reflection on our first attempt, we decided to resume this project again in Q3 2026.
+
+As we enter Q4 2026, we are excited to announce that we have been successful in training a 128M parameter model. AIMS-1 is a 128 million parameter language model that performs well on benchmarks for its class.
+
+This also gives us the confidence of creating bigger and better models if we can access a larger budget.
+
+The next section details our journey of our second attempt of building the AIMS-1-128M parameter model, trained on a shoe string budget of $200, on a single [G4 NVIDIA GPU](https://cloud.google.com/blog/products/compute/introducing-g4-vm-with-nvidia-rtx-pro-6000) in a Google Colab Notebook.
+
+> **Note:** The cool thing is, one can train this model on their personal Macbooks as well, making it fairly free.
+
+## Attempt 2 — Q3 2026: A New Approach
+
+### Initial Research Objectives and Guiding Principles
+
+Our initial goals were shaped by the following key observations and principles:
+
+- **Cost Efficiency of Local Models:** Proprietary LLMs from frontier labs introduce ongoing, variable costs. In contrast, local edge deployments carry a fixed overhead, offering significant long-term cost benefits.
+
+- **The Future of On-Device AI:** Running models locally on smartphones and edge devices will become a primary deployment paradigm for privacy, low latency, and offline availability.
+
+- **Agent Harnesses:** LLM + Agent Harness is now an established paradigm. Smaller language models paired with targeted tool-use harnesses have been known to outperform frontier models on a performance-to-cost basis.
+
+- **First-Principles Understanding:** Building an LLM from scratch provides deep insight into modern AI architectures, trade-offs, and true technical capabilities beyond marketing hype.
+
+- **Domain Specialization:** Small language models can deliver outsized impact when fine-tuned for specialized, narrow domains.
+
+### Project Constraints
+
+- **Budget:** Operating as an independent home lab, our total available budget was capped at $500.
+
+- **Timeline:** We strictly limited the development window to a single quarter.
+
+- **Hardware:** Training was restricted to a single NVIDIA G4 GPU via a Google Colab Pro+ subscription.
+
+<figure class="my-10">
+  <a href="/blog/building-aimadesimple-language-model-aims-1-128m-from-scratch/our-setup.jpg">
+    <img
+      src="/blog/building-aimadesimple-language-model-aims-1-128m-from-scratch/our-setup.jpg"
+      alt="Our AIMS-1 workspace with a laptop, tablet, handwritten notebook, and printed model architecture diagram on the desk."
+      width={4000}
+      height={3000}
+      class="mx-auto h-auto w-full max-w-3xl"
+      loading="lazy"
+      decoding="async"
+    />
+  </a>
+  <figcaption class="text-center">Our setup while building AIMS-1.</figcaption>
+</figure>
+
+### Initial Goals
+
+Based on these observations and  constraints, we set three high-level goals for our model:
+
+1. Train a sub-billion parameter model on a shoestring budget.
+
+2. Achieve coherent, grammatically fluid English language output.
+
+3. Demonstrate high proficiency on a narrow downstream use case.
+
+### Covering Our Bases
+
+We began our journey with immersing ourselves in the available text on building Language Models.
+
+As mentioned before, there are two good places to start to understand how to build a Language Model from Scratch:
+
+1. [Sebastian Raschka’s - Building a Large Language Model from Scratch (Book + Videos + GitHub repo)](https://sebastianraschka.com/llms-from-scratch/)
+
+2. [Andre Karpathy’s NanoGPT (Videos + GitHub repo)](https://github.com/karpathy/nanogpt)
+
+Both of these resources offer excellent educational value, providing the foundational knowledge required to construct a language model from scratch despite the aforementioned limitations.
+
+We worked through both resources and completed the stages of training a GPT-2 model from scratch using the provided limited datasets.
+
+### The Five Stages of Building a Language Model
+
+Based on the above exercise, we have broken down the process of building a Language Model into 5 Stages:
+
+1. **Model Architecture:** In this stage, you design and refine the underlying structural blueprint—such as layer configuration, attention mechanisms, and parameter dimensions—used to construct the language model.
+
+2. **Dataset Curation:** In this stage, you select, clean, and filter the specific text sources needed to properly pretrain, fine-tune, and align the model for high-quality language output.
+
+3. **Pretraining:** In this stage, the model is trained on datasets using gradient descent and backpropagation. The primary objective is to establish a foundational understanding of language structure before compressing world knowledge into the model's weights. This process yields a base model, which is then thoroughly evaluated to benchmark its capabilities.
+
+4. **Supervised Fine-Tuning (SFT):** In this stage, the pre-trained model is further trained on targeted datasets to align with specific instructions and desired response behaviors. This step also involves evaluating the model's instruction-following performance.
+
+5. **Alignment:** In this final stage, the model is further aligned to prefer helpful and safe outputs based on human feedback or preference optimization techniques.
+
+Let’s look at each of these in detail.
+
+#### Understanding Model Architecture
+
+Understanding modern language model architectures starts with decoder-only Transformers, which form the foundation of state-of-the-art LLMs. This process involves studying the original GPT-2 architecture, exploring key advancements across models like OPT, LLaMA, Qwen, GPT OSS, Gemma, and DeepSeek, and experimenting with custom designs and hyperparameter tuning.
+
+Extensive literature covers Transformers and decoder-only models. Some of our primary references include:
+
+- [The original Transformer research paper](https://doi.org/10.48550/arXiv.1706.03762)
+
+- [Sebastian Raschka’s book](https://sebastianraschka.com/llms-from-scratch/)
+
+- [Andrej Karpathy’s video series](https://youtube.com/playlist?list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ&si=jY05EPJ-QaFf_Npq)
+
+- [AI by Hand](https://www.byhand.ai/)
+
+Rather than repeating detailed explanations, we highlight a few core concepts below.
+
+Key architectural principles to keep in mind:
+
+- Transformers were originally designed as encoder-decoder architectures tailored primarily for machine translation.
+
+- Modern Large Language Models rely predominantly on decoder-only architectures.
+
+- At their core, decoder-only LLMs operate as next-token predictors.
+
+- A standard decoder-only LLM consists of the following foundational components:
+
+  - **Tokenizer:** Converts input text into numerical representations required for mathematical operations during next-token prediction. Tokenizers operate with a fixed vocabulary, with most modern implementations relying on the Byte Pair Encoding (BPE) algorithm. Simply saying each individual token in the fixed vocabulary is mapped to a number. The input sequence can then be written as a sequence of these numbers.
+  - **Token Embeddings:** Maps each token in the vocabulary to a vector of size `emb_dim`. These trainable parameters form a weight matrix typically sized as `vocab_size * emb_dim`. Simply saying each token number is converted into a vector of n dimensions where `n = emb_dim`.
+  - **Positional Embeddings:** The token embeddings don’t carry any positional information about a token with respect to other tokens in an input sequence. Positional Embeddings provide positional context for tokens within an input sequence, as standard token embeddings carry no inherent spatial information. The two main types are:
+    - **Absolute Positional Embeddings:** Used in earlier designs like GPT-2.
+    - **Rotary Positional Embeddings (RoPE):** Widely used in modern state-of-the-art architectures, integrated directly into the attention mechanism within transformer blocks.
+  - **Transformer Block:** The central processing engine of the model. Each block typically comprises:
+    - Normalization Layer 1
+    - Attention Layer
+    - Normalization Layer 2
+    - Feed-Forward Layer
+    - Dropout Layer (present in GPT-2; generally omitted in contemporary architectures)
+  - **Final Normalization Layer:** Normalizes the output from the final transformer block to stabilize training and improve overall performance.
+  - **Output Layer:** Projects internal representations into the final vocabulary logits. Weight tying is frequently applied here to share weights with the token embedding matrix.
+
+This gives us a basic understanding of the architecture of a modern decoder only language model.
+
+When training a language model from scratch, you can choose from two main architectural paths:
+
+- **Existing Architecture:** Replicate a proven, existing design and train it directly on your selected datasets.
+- **Custom Architecture:** Design a custom setup tailored to specific requirements, categorized by the level of modification:
+  - **High-Level Customization:** Adjust hyperparameters while maintaining standard architectural structural components.
+  - **Mid-Level Customization:** Modify hyperparameters while also combining and adapting components from various model families to suit your use case.
+  - **Low-Level Customization:** Construct custom architectures from scratch by implementing novel structural components or mechanisms.
+
+These levels reflect where code modifications occur: hyperparameter adjustments involve configuration changes, whereas low-level customization requires editing core model source code.
+
+With the core model architecture established, the next critical step is selecting and curating pretraining datasets.
+
+#### Dataset Research and Selection
+
+##### Pretraining Datasets
+
+Dataset curation is often overlooked in mainstream AI literature, largely because early foundational models were trained indiscriminately on whatever text was readily available online. However, a growing body of research demonstrates that thoughtfully curated datasets enable small language models to be trained effectively from scratch.
+
+Datasets play a fundamental role in shaping a language model's capabilities, as the training text directly governs its ability to accurately predict the next token. Exposing the architecture to a diverse and balanced distribution of tokens is essential for robust performance.
+
+The token-to-parameter ratio is governed primarily by Chinchilla scaling laws, which suggest that a dataset should contain roughly 20 times more tokens than the model's total parameter count to achieve optimal learning efficiency.
+
+Frontier research labs with massive financial backing can afford to pretrain models on web-scale datasets encompassing trillions of tokens.
+
+However, under strict resource constraints, pretraining on vast web crawls is infeasible.
+
+Recent studies confirm that high-quality data curation significantly elevates the output performance of smaller language models.
+
+Consequently, for small-budget projects, data quality and curation become the primary levers for success.
+
+Since most published datasets target large-scale LLMs, identifying or constructing datasets suitable for sub-billion parameter models requires deliberate effort.
+
+When sourcing pretraining data, practitioners generally choose between two primary approaches (or combine them based on project goals):
+
+1. Utilizing existing open-source datasets
+
+2. Curating a custom synthetic or domain-specific dataset
+
+We conducted a comprehensive review of publicly available datasets. After evaluating several options (including synthesizing a bespoke dataset), we selected the BabyLM dataset for our pretraining pipeline.
+
+<div class="my-6 overflow-x-auto [&_table]:min-w-[560px] [&_table]:my-0 [&_td]:break-words" role="region" aria-label="Pretraining datasets" tabIndex={0}>
+
+| Dataset | Comments |
+| --- | --- |
+| [Dolma dataset](https://huggingface.co/datasets/allenai/dolma) | Open pretraining dataset |
+| [Project Gutenberg](https://www.gutenberg.org/) | Public domain literature |
+| [FineWeb](https://huggingface.co/datasets/HuggingFaceFW/fineweb) | Web pretraining dataset |
+| [FineWeb Edu](https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu) | Educational web data from FineWeb |
+| [Encyclopedia Britannica 1911](https://en.wikisource.org/wiki/1911_Encyclop%C3%A6dia_Britannica) | Public domain encyclopedia |
+| [TinyStories](https://huggingface.co/datasets/roneneldan/TinyStories) | Synthetic short stories dataset |
+| [BabyLM dataset](https://babylm.github.io/) | A dataset that mimics how children learn language using a limited amount of reading material (~100 million words). (BabyLM 2026 100M Strict) |
+| [C4](https://huggingface.co/datasets/allenai/c4) | Colossal Clean Crawled Corpus |
+| [RefinedWeb](https://huggingface.co/datasets/tiiuae/falcon-refinedweb) | Filtered web dataset from Falcon |
+| [SmolLM-Corpus](https://huggingface.co/datasets/HuggingFaceTB/smollm-corpus) | Curated collection for small LLMs |
+| [Cosmopedia](https://huggingface.co/datasets/HuggingFaceTB/cosmopedia) | Synthetic textbook data (multiple versions) |
+| [nampdn-ai/tiny-textbooks](https://huggingface.co/datasets/nampdn-ai/tiny-textbooks) | Synthetic tiny textbooks |
+| [Common Pile](https://huggingface.co/datasets/EleutherAI/pile) | Diverse pretraining dataset collection |
+
+</div>
+
+We Selected the BabyLM dataset directly aligned with our core objective. The dataset is carefully curated for language model in the 100M parameter range and is comprehensive in terms of exposure to vocabulary of a human child.
+
+Pretraining serves two distinct functions: instilling a structural comprehension of language and compressing factual world knowledge into model weights.
+
+Given our resource boundaries, we focused exclusively on the former—developing solid linguistic fluidness comparable to early elementary reading levels. To accomplish this, we selected the BabyLM 100M Strict dataset for pretraining.
+
+##### Post-Training Datasets
+
+<div class="my-6 overflow-x-auto [&_table]:min-w-[560px] [&_table]:my-0 [&_td]:break-words" role="region" aria-label="Post-training datasets" tabIndex={0}>
+
+| Dataset | Comments |
+| --- | --- |
+| [SmolTalk](https://huggingface.co/datasets/HuggingFaceTB/smoltalk) | Instruction fine-tuning dataset for small models |
+| [Hugging Face TB / everyday-conversations-llama3.1-2k](https://huggingface.co/datasets/HuggingFaceTB/everyday-conversations-llama3.1-2k) | Selected for supervised fine-tuning to enable conversational exchanges |
+| [Magpie](https://magpie-align.github.io/) | Instruction fine-tuning data synthesis method and dataset |
+
+</div>
+
+We also decided to create our own dataset [AIMadeSimpleResearch/simple-everyday-conversations](https://huggingface.co/datasets/AIMadeSimpleResearch/simple-everyday-conversations).
+
+#### Baseline Pretraining Experiments
+
+During the pretraining phase, the core execution loop—comprising backpropagation, optimization via gradient descent, and training state management—is established. These core mechanisms scale consistently across varying model parameters.
+
+With the architectural framework defined and the datasets curated, we initiated the pretraining workflow.
+
+Our baseline experiments utilized the established GPT-2 architecture as a reference model to evaluate performance across several datasets.
+
+The following table summarizes the initial baseline configurations and datasets evaluated during this phase:
+
+Here is our list of experiments:
+
+<div class="my-6 overflow-x-auto [&_table]:min-w-[560px] [&_table]:my-0 [&_td]:break-words" role="region" aria-label="Baseline pretraining experiments" tabIndex={0}>
+
+| Dataset | Experiment and Observations |
+| --- | --- |
+| Britannica Encyclopedia 1911 | Trained a GPT 2 model on the Britannica Encyclopedia 1911. This dataset is helpful to compress world knowledge known in 1911 but doesn’t generalise will for developing a linguistic understanding of the English Language. |
+| TinyStories | Trained a GPT 2 model on the TinyStories dataset. This dataset improved the linguistic understanding but is focused on a narrow story telling use case. |
+| Gutenberg Dataset | Trained a GPT 2 model on the Gutenberg Dataset. This dataset performed better than the previous two but again fell short in general linguist understanding. |
+| BabyLM | Trained a GPT 2 model on the BabyLM 2026 Strict dataset. Good overall generalisation, closer to our objective. |
+
+</div>
+
+Establishing this initial baseline provided the empirical groundwork necessary to systematically iterate on and customize the underlying model architecture.
+
+#### Initial Supervised Fine-Tuning
+
+To complete the end-to-end development cycle, we performed supervised fine-tuning using the Hugging Face TB / everyday-conversations-llama3.1-2k dataset.
+
+We aligned the model to engage in coherent, open-ended conversational exchanges.
+
+#### Preference Alignment
+
+Preference alignment techniques (such as RLHF or DPO) were intentionally omitted at this stage, as they require specialized feedback data beyond the immediate scope and requirements of this project.
+
+### Exploring More Resources and Research
+
+At this point, we also reviewed additional sources, particularly research papers and playbooks:
+
+- [SmolLM2 research paper](https://doi.org/10.48550/arXiv.2502.02737)
+
+- [HuggingFace Playbook SmolLM 3](https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook)
+
+- [MobileLLM research paper](https://doi.org/10.48550/arXiv.2402.14905)
+
+Here are our major takeaways from these resources:
+
+- The Smol Training Playbook, by HuggingFace, provides a highly comprehensive guide to training small language models. While its extensive detail can be overwhelming to read end-to-end, uploading it to a tool like Google NotebookLM makes it easy to query and extract key insights efficiently.
+
+- **The SmolLM2 Research Paper:** This research paper focuses on Data Centric Training. It highlights the outsized importance of data curation, especially for smaller models. It highlights that data should be curated for core knowledge and fundamental capabilities. Reference research - Abdin et. al. 2024a , Rolnick et. al., 2017
+
+- The SmolLM2 Research Paper also highlights the purpose of pretraining. Pretraining helps the model fit the structure of language (Clark, 2019) and store factual knowledge (Petroni et. al. 2019, Roberts et. al., 2020)
+
+- The sweet spot for vocabulary size depends on the target coverage and model size. For English - only models, around 50k tokens are usually sufficient.
+
+- GQA is a solid alternative to MHA. It preserves performance while being more efficient at inference
+
+- When using Group Query Attention, the Query-to-KV Head Ratio should be roughly 3:1 to 4:1
+
+- Dropout Layers are used in model architecture when the model is trained on the same dataset for multiple epochs
+
+- Model architectures can be Dense, MoE (Mixture of Experts) or Hybrid
+
+- **MobileLLM research:** The paper highlights the significance of model architecture for sub-billion-parameter models. Its main findings include:
+  - Deep-and-thin architectures, with smaller embedding dimensions and more attention layers
+  - Embedding sharing
+  - Grouped-Query Attention (GQA)
+  - Immediate block-wise weight sharing
+  - Feed-forward layers dominate compute during pretraining, while attention becomes the main bottleneck at inference.
+  - The MobileLLM baseline evaluates four design techniques for small models:
+    1. Adopting SwiGLU FFN (Dauphin et al., 2017)
+    2. Using deep-and-thin architectures
+    3. Revisiting embedding sharing (Zhang et al., 2022)
+    4. Using Grouped-Query Attention (Chowdhery et al., 2023)
+  - The paper reports that models with 30 or even 42 layers perform significantly better than 12-layer models around 125M parameters. This differs from earlier 125M models, which were generally limited to 12 layers (Zhang et al., 2022; Black et al., 2022).
+  - **Query and KV heads:** Balancing semantic detail per head against the number of nonlinear combinations is an important design choice. In GQA, fewer key-value heads are shared across query heads; the key-value heads are repeated when computing attention scores and outputs.
+  - The paper reports that 16 query heads perform well. Reducing the KV heads from 16 to 4 produced comparable accuracy for the 125M model and a 0.2-point accuracy drop for the 350M model, while reducing model size by almost 10%.
+
+<figure class="my-10">
+  <a href="/blog/building-aimadesimple-language-model-aims-1-128m-from-scratch/our-daily-notebook.jpg">
+    <img
+      src="/blog/building-aimadesimple-language-model-aims-1-128m-from-scratch/our-daily-notebook.jpg"
+      alt="Our open research notebook with handwritten architecture notes, experiment ideas, and colorful sticky notes."
+      width={4000}
+      height={3000}
+      class="mx-auto h-auto w-full max-w-3xl"
+      loading="lazy"
+      decoding="async"
+    />
+  </a>
+  <figcaption class="text-center">Our daily notebook, used to work through ideas and record notes during the project.</figcaption>
+</figure>
+
+### Revisiting and Refining Our Research Objectives
+
+Based on our literature review, training experiments, and research, we refined our goals as follows:
+
+1. We recognized that pretraining a language model serves two primary purposes: developing linguistic capabilities and compressing world knowledge.
+
+2. Given our shoestring budget, achieving both objectives was infeasible. Therefore, we focused on the first: developing strong linguistic capabilities in English.
+
+3. To quantify "strong linguistic capabilities," we drew inspiration from the BabyLM benchmark, which models language acquisition on the volume of data a human child receives. We targeted the language proficiency level of a 5th-grade student—a stage where a child possesses robust language fluency and, when paired with modern tools, can effectively perform everyday tasks.
+
+In summary, our refined goal became:
+
+> Build a language model on a shoestring budget that achieves the linguistic proficiency of an elementary school student and performs exceptionally well on a narrow use case.
+
+### Building the AIMS-1-128M Language Model
+
+#### Final Model Architecture
+
+We designed the following architecture based on insights from the literature review above and our empirical findings:
+
+<figure class="my-8">
+  <a href="/blog/building-aimadesimple-language-model-aims-1-128m-from-scratch/AIMS%20Model%20Ablation%203.1%20Architecture%20Diagram.jpg">
+    <img
+      src="/blog/building-aimadesimple-language-model-aims-1-128m-from-scratch/AIMS%20Model%20Ablation%203.1%20Architecture%20Diagram.jpg"
+      alt="AIMS-1-128M architecture: a custom GPT-2 tokenizer and 512-dimensional embeddings feed 28 transformer blocks with RoPE, masked grouped-query attention, RMSNorm, dropout, and a gated feed-forward network, followed by final RMSNorm and a linear output layer."
+      class="mx-auto h-auto w-full max-w-3xl"
+      loading="lazy"
+      decoding="async"
+    />
+  </a>
+  <figcaption class="text-center">AIMS-1-128M model architecture. Select the diagram to view the full-size image.</figcaption>
+</figure>
+
+The key architectural components and our design rationale include:
+
+- **Custom GPT-2 Tokenizer:** Given that an optimal vocabulary size for an English-only model is around 50,000 tokens, we selected the GPT-2 tokenizer. We extended it with special tokens to support post-training tasks: `<|user|>`, `<|assistant|>`, and `<|pad|>`.
+- **Token Embeddings:** We opted for an embedding dimension of 512, aligning with a deep-and-thin model architecture design.
+- **Positional Embeddings:** We implemented Rotary Position Embeddings (RoPE) supporting a context length of 1,024 tokens and a base frequency (`rope_base`) of 10,000, which is well-suited for a ~50k vocabulary size.
+- **Transformer Blocks:** We configured 28 transformer blocks to stay near the 125M parameter target (layer count can be further scaled if weight sharing is applied to the output layer):
+  - **Normalization Layers:** Replaced standard LayerNorm with RMSNorm to improve computational efficiency with minimal impact on accuracy.
+  - **Attention Layer:** Adopted Masked Grouped-Query Attention (GQA) over standard Multi-Head Attention, drawing on MobileLLM and modern LLM paradigms. We configured 16 query attention heads based on MobileLLM recommendations.
+  - **Dropout:** Retained dropout regularization since training on the BabyLM dataset spans multiple epochs.
+  - **Feed-Forward Layer:** Implemented SwiGLU (gated) activation with a hidden dimension 2.66x the embedding dimension (1,365 units), evaluating various expansion factors (2.68x, 3x, 4x) inspired by Qwen, LLaMA, and MobileLLM architectures.
+- **Final Normalization Layer:** Applied RMSNorm prior to the output projection for efficiency.
+- **Output Layer:** Used a standard linear output layer without weight tying to keep implementation complexity manageable.
+
+We also experimented with scaling to a larger parameter count but ultimately decided against it due to two primary factors:
+
+1. **Hardware Constraints:** The limited VRAM on a single NVIDIA G4 GPU (via Google Colab Pro+) could not accommodate a larger model architecture.
+
+2. **Training Cost & Compute:** Per Chinchilla scaling laws, token requirements scale proportionally with parameter count (requiring ~20x tokens per parameter). Training a larger model would significantly increase both overall runtime and operational expenses.
+
+#### Pretraining Dataset and Curriculum
+
+We primarily used the BabyLM Dataset for our pretraining. We experimented with different combinations of curriculums. Here are the curriculum we followed for the model we have released:
+
+##### BabyLM Dataset Composition
+
+The BabyLM 2026 Strict dataset comprises the following sources:
+
+<div class="my-6 overflow-x-auto [&_table]:min-w-[560px] [&_table]:my-0 [&_td]:break-words" role="region" aria-label="BabyLM dataset composition" tabIndex={0}>
+
+| Source | Training File | Content | Approximate Tokens |
+| --- | --- | --- | --- |
+| CHILDES | `childes.train.bin` | Transcripts from the Child Language Data Exchange System, capturing naturalistic child-directed speech and parent-child interactions | ~28.4M |
+| Project Gutenberg | `gutenberg.train.bin` | Public domain literary works offering narrative depth and structured written English | ~25.6M |
+| OpenSubtitles | `open_subtitles.train.bin` | Dialogue transcripts from movies and television shows, providing exposure to informal, multi-turn dialogue | ~22.8M |
+| Simple Wikipedia | `simple_wiki.train.bin` | Articles from Simple English Wikipedia, offering introductory factual knowledge with simplified syntax | ~15.3M |
+| BNC Spoken | `bnc_spoken.train.bin` | Excerpts from the spoken component of the British National Corpus, capturing unscripted everyday British conversations | ~7.6M |
+| Switchboard | `switchboard.train.bin` | Transcripts of spontaneous telephone conversations between paired speakers | ~248K |
+
+</div>
+
+- **Variable Sequence Length Training**
+
+  Our curriculum leverages variable sequence length training. Although the model supports a full context length of 1,024 tokens, we progressively scaled the sequence length from 256 to 1,024 tokens during training. Empirical support for this curriculum strategy is detailed in [this research paper](https://doi.org/10.48550/arXiv.2405.13226) and aligns with the approach used for the [BabyLM 2026 baseline model](https://github.com/babylm-org/babylm-baselines).
+
+  The training curriculum is divided into four sequential stages:
+
+- **Stage 1: Initial Child-Directed Focus**
+
+  - **Datasets:** Trained exclusively on the childes dataset (`childes.train.bin` with `childes.bin` for validation).
+  - **Parameters:** 2 epochs, batch size of 32, maximum sequence length of 256, stride of 256, with shuffling enabled.
+
+- **Stage 2: Expanded Context Length**
+
+  - **Datasets:** Continued on the childes dataset.
+  - **Parameters:** 2 epochs, batch size of 32, maximum sequence length of 512, stride of 512, with shuffling enabled.
+
+- **Stage 3: Broadened Multi-Source Training**
+
+  - **Datasets:** Expanded to include open_subtitles, bnc_spoken, gutenberg, and simple_wiki.
+  - **Parameters:** 4 epochs, batch size of 32, maximum sequence length of 512, stride of 512, with shuffling enabled.
+
+- **Stage 4: Full Context Length Fine-Tuning**
+
+  - **Datasets:** Trained on the combined multi-source datasets (open_subtitles, bnc_spoken, gutenberg, and simple_wiki).
+  - **Parameters:** 8 epochs, batch size of 32, maximum sequence length and stride set to the model's full context length (<code class="break-all">MODEL_CONFIG["context_length"]</code>), with shuffling enabled.
+
+#### Pretraining Run
+
+We pre-trained the model using the four-stage curriculum described above.
+
+We are choosing to not go into details of our other choice of hyperparameters at the moment.
+
+##### Evaluation Results
+
+The model has been evaluated on the BabyLM 2026 Evals with a primary focus on assessing its linguistic ability in English. The results demonstrate strong syntactic and grammatical performance for its scale.
+
+###### Comparison with BabyLM Baselines
+
+<div class="my-6 overflow-x-auto [&_table]:min-w-[560px] [&_table]:my-0 [&_td]:break-words" role="region" aria-label="BabyLM benchmark comparison" tabIndex={0}>
+
+| Zero-Shot Task | BabyLM GPT-2 Strict | Strict-Small | AIMS-1 128M |
+| --- | ---: | ---: | ---: |
+| BLiMP | 74.73% | 65.23% | 75.10% |
+| BLiMP Supplement | 65.00% | 57.25% | 65.23% |
+| EWoK | 54.37% | 50.63% | 53.46% |
+| Entity Tracking | 16.91% | 19.10% | 19.79% |
+| COMPS | 55.85% | 51.81% | 56.62% |
+| GlobalPIQA | 36.62% | 35.09% | — |
+
+</div>
+
+*— indicates a result not reported.*
+
+###### Comparison with GPT-2 124M
+
+We also compared the AIMS-1-128M model with the original GPT 2 model released by OpenAI on the full BLiMP eval and the EWoK eval.
+
+<div class="my-6 overflow-x-auto [&_table]:min-w-[560px] [&_table]:my-0 [&_td]:break-words" role="region" aria-label="GPT-2 benchmark comparison" tabIndex={0}>
+
+| Evaluation | GPT-2 124M | AIMS-1 128M |
+| --- | ---: | ---: |
+| BLiMP — full | ~66% | 73.46% |
+| EWoK | ~50% | 53.46% |
+
+</div>
+
+###### Key Insights from Evaluations
+
+- **Syntactic & Grammatical Strength:** AIMS-1 128M achieves a 75.10% score on BLiMP and 65.23% on BLiMP Supplement, outperforming both the BabyLM baseline GPT-2 Strict model and the Strict-Small model.
+
+- **Overall Comparison with Standard GPT-2:** When compared against the original full-scale GPT-2 124M model, AIMS-1 128M achieves higher performance on BLiMP (73.46% vs ~66%) and EWoK (53.46% vs ~50%), highlighting the effectiveness of the updated architecture and targeted curriculum training.
+
+- **World Knowledge & Reasoning Limits:** Tasks requiring broader factual knowledge or entity tracking remain challenging (e.g., Entity Tracking at 19.79%), consistent with our decision to prioritize linguistic fluency over factual compression on a strict training budget.
+
+#### Supervised Fine-Tuning for Everyday Conversations
+
+While we thought of a number of narrow use cases for supervised finetuning. Finding the perfect dataset was becoming extremely difficult for our model size.
+
+Hence instead we decided to SFT on simple everyday conversations.
+
+We utilised our custom dataset [AIMadeSimpleResearch/simple-everyday-conversations](https://huggingface.co/datasets/AIMadeSimpleResearch/simple-everyday-conversations) and the [HuggingFace everyday conversations dataset](https://huggingface.co/datasets/HuggingFaceTB/everyday-conversations-llama3.1-2k) for our finetuning.
+
+You can speak to the model on the following topics:
+
+- Hobbies
+
+- Social conversations
+
+- Personal preferences
+
+- Emotional Support
+
+- Playful conversations
+
+You can try the finetuned model in the [AIMS-1 Small Model Playground](https://huggingface.co/spaces/AIMadeSimpleResearch/AIMS-1-128M-it-demo)
+
+Here are some examples of conversations we have had with our model:
+
+##### Example Conversations
+
+<figure class="my-8">
+  <a href="/blog/building-aimadesimple-language-model-aims-1-128m-from-scratch/inference-example.png">
+    <img
+      src="/blog/building-aimadesimple-language-model-aims-1-128m-from-scratch/inference-example.png"
+      alt="A conversation in the AIMS-1 Small Model Playground: the user says hello and describes feeling tired, and the model asks about their day."
+      width={2456}
+      height={1392}
+      class="mx-auto h-auto w-full"
+      loading="lazy"
+      decoding="async"
+    />
+  </a>
+  <figcaption class="text-center">An example conversation in the AIMS-1 Small Model Playground. Select the image to view it full-size.</figcaption>
+</figure>
+
+<ConversationDemo title="Example 1: A Tiring Workday" turns={[{"speaker": "user", "text": "Hello! How are you?"}, {"speaker": "assistant", "text": "I'm doing great, thanks for asking! How about you? How's your day going so far?"}, {"speaker": "user", "text": "I am super tired"}, {"speaker": "assistant", "text": "Oh no, I'm sorry to hear that. Was it just a lot of work, or did something specific happen?"}, {"speaker": "user", "text": "It was a lot of work"}, {"speaker": "assistant", "text": "That sounds stressful. Do you think you'll be able to relax a bit this weekend?"}, {"speaker": "user", "text": "Can't wait for the weekend"}, {"speaker": "assistant", "text": "I bet! Do you have any fun plans for the weekend to unwind?"}]} />
+
+<ConversationDemo title="Example 2: Choosing a TV Series" turns={[{"speaker": "user", "text": "Hello! How are you?"}, {"speaker": "assistant", "text": "I'm doing great, thanks for asking! How about you? Doing anything fun today?"}, {"speaker": "user", "text": "I am planning to watch a TV series"}, {"speaker": "assistant", "text": "That sounds like a great idea. What kind of shows are you usually into?"}, {"speaker": "user", "text": "Comedy"}, {"speaker": "assistant", "text": "Indie shows are great for relaxing. You can't go wrong with something like 'The Good Place' or 'The Good Place' if you haven't seen it."}]} />
+
+<ConversationDemo title="Example 3: Talking About Dinner" turns={[{"speaker": "user", "text": "Hi, I am feeling hungry and I don't know what to do"}, {"speaker": "assistant", "text": "I don't have a stomach, but if I could, I think I'd go for something easy. What's on your menu?"}, {"speaker": "user", "text": "Pasta"}, {"speaker": "assistant", "text": "Pasta is always a winner! Are you leaning towards something heavy like pizza, or maybe something lighter?"}, {"speaker": "user", "text": "Pasta can be heavy or light depending on how you make it."}, {"speaker": "assistant", "text": "That makes sense. You can actually start a new pizza from scratch. Do you have a favorite topping?"}, {"speaker": "user", "text": "Not pizza, pasta!"}, {"speaker": "assistant", "text": "Fair enough, let's check the menu online. I'll see how it goes."}, {"speaker": "user", "text": "Yeah sure"}, {"speaker": "assistant", "text": "Haha, thanks for the tip! Enjoy your dinner."}]} />
+
+<ConversationDemo title="Example 4: Learning to Cook" turns={[{"speaker": "user", "text": "I started learning to cook. What should I try first?"}, {"speaker": "assistant", "text": "That's a great idea! Do you have a specific dish in mind, or are you just going to wing it?"}]} />
+
+#### Post-Training Preference Alignment
+
+We decided to forego post alignment due to a lack of feedback and a defined direction at this point.
+
+## Conclusion
+
+This project has been an extraordinarily rewarding endeavor for our independent research lab. Undertaking the development of a language model completely from scratch on a strict $200 budget and a single GPU presented significant constraints, but it also forced us to prioritize high-efficiency architectural choices, rigorous dataset curation, and clear, targeted objectives.
+
+We are proud to have met our core objectives: demonstrating that a sub-billion parameter model can achieve minimal English syntactic fluency and engage in natural everyday conversations without requiring immense compute resources. Looking ahead, we plan to build upon these foundation blocks by exploring 235M parameter scaling, preference alignment, and tool-calling capabilities. We hope this experiment and transparent documentation inspire other small labs, researchers, and hobbyists to undertake similar endeavors and demonstrate what is possible on a shoestring budget.
+
+## Next Steps
+
+Here are a set of proposed next steps:
+
+1. Scale training to a 235M parameter model using an expanded dataset.
+
+2. Develop a character language model that impersonates a historical figure.
+
+3. Perform preference alignment on the 128M parameter model.
+
+4. Integrate tool-calling capabilities into the 128M and 235M parameter models.
+
+5. Explore adding simple reasoning capabilities to the AIMS-1-128M model.
+
+**Note:** This blog was created with assistance from OpenAI Codex and Google Gemini, primarily to tighten the language and help create supporting visuals.
+
+## Appendix 1: Useful Resources
+
+We primarily relied on the following and completed them in order:
+
+1. [Sebastian Raschka’s 3 Hour Workshop on Building Large Language Models](https://sebastianraschka.com/llms-from-scratch/)
+
+2. [Sebastian Raschka’s YouTube course (accompanying his book)](https://sebastianraschka.com/llms-from-scratch/)
+
+3. [Reading Sebastian Raschka’s Book](https://sebastianraschka.com/llms-from-scratch/)
+
+4. [Going through his GitHub Repository for this book](https://sebastianraschka.com/llms-from-scratch/)
+
+Going through the following research papers:
+
+- [TinyStories](https://huggingface.co/datasets/roneneldan/TinyStories)
+
+- [SmolLM 2](https://doi.org/10.48550/arXiv.2502.02737)
+
+- [MobileLLM](https://doi.org/10.48550/arXiv.2402.14905)
+
+- [HuggingFace Playbook for SmolLM](https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook)
+
+## Appendix 2: Uploading to Hugging Face
+
+The following blog was super helpful in helping us upload our model to HuggingFace.
+
+[Giles Thomas’s guide to uploading custom models to Hugging Face](https://www.gilesthomas.com/2026/01/custom-automodelforcausallm-frompretrained-models-on-hugging-face)
+
+## Appendix 3: Training Environment
+
+We decided to train our model in native PyTorch following Sebastian Raschka’s code and using Codex to help us build on top of it.
