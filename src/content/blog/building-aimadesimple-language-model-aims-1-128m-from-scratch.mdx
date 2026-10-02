@@ -277,7 +277,7 @@ We conducted a comprehensive review of publicly available datasets. After evalua
 
 </div>
 
-We Selected the BabyLM dataset directly aligned with our core objective. The dataset is carefully curated for language model in the 100M parameter range and is comprehensive in terms of exposure to vocabulary of a human child.
+We Selected the BabyLM dataset directly aligned with our core objective. The BabyLM dataset is carefully curated for language models in the 100M parameter range and is comprehensive in terms of its exposure to the vocabulary of a human child.
 
 Pretraining serves two distinct functions: instilling a structural comprehension of language and compressing factual world knowledge into model weights.
 
@@ -503,14 +503,14 @@ The model has been evaluated on the BabyLM 2026 Evals with a primary focus on as
 
 <div class="my-6 overflow-x-auto [&_table]:min-w-[560px] [&_table]:my-0 [&_td]:break-words" role="region" aria-label="BabyLM benchmark comparison" tabIndex={0}>
 
-| Zero-Shot Task | BabyLM GPT-2 Strict | Strict-Small | AIMS-1 128M |
+| Zero-Shot Task | AIMS-1 128M | BabyLM GPT-2 Strict | Strict-Small |
 | --- | ---: | ---: | ---: |
-| BLiMP | 74.73% | 65.23% | 75.10% |
-| BLiMP Supplement | 65.00% | 57.25% | 65.23% |
-| EWoK | 54.37% | 50.63% | 53.46% |
-| Entity Tracking | 16.91% | 19.10% | 19.79% |
-| COMPS | 55.85% | 51.81% | 56.62% |
-| GlobalPIQA | 36.62% | 35.09% | — |
+| BLiMP | 75.10% | 74.73% | 65.23% |
+| BLiMP Supplement | 65.23% | 65.00% | 57.25% |
+| EWoK | 53.46% | 54.37% | 50.63% |
+| Entity Tracking | 19.79% | 16.91% | 19.10% |
+| COMPS | 56.62% | 55.85% | 51.81% |
+| GlobalPIQA | — | 36.62% | 35.09% |
 
 </div>
 
@@ -522,10 +522,10 @@ We also compared the AIMS-1-128M model with the original GPT 2 model released by
 
 <div class="my-6 overflow-x-auto [&_table]:min-w-[560px] [&_table]:my-0 [&_td]:break-words" role="region" aria-label="GPT-2 benchmark comparison" tabIndex={0}>
 
-| Evaluation | GPT-2 124M | AIMS-1 128M |
+| Evaluation | AIMS-1 128M | GPT-2 124M |
 | --- | ---: | ---: |
-| BLiMP — full | ~66% | 73.46% |
-| EWoK | ~50% | 53.46% |
+| BLiMP — full | 73.46% | ~66% |
+| EWoK | 53.46% | ~50% |
 
 </div>
 
